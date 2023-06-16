@@ -1,24 +1,11 @@
-<script >
-import { RouterLink, RouterView } from 'vue-router';
-import Nav1 from '/src/views/HomeView.vue';
-
-export default {
-  components: {
-    Nav1
-  }
-};
-</script>
+<script setup >
+import Main from './layout/main.vue'
+</script >
 
 <template>
-    <Nav1/>
-        <!-- <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink> -->
-      
+   <Main>
 
-  <!-- <RouterView /> -->
+      1
+   </Main>
 </template>
 
-<style scoped>
-
-
-</style>
