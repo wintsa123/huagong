@@ -1,22 +1,35 @@
+import { createAlova } from "alova";
+import GlobalFetch from "alova/GlobalFetch";
+import VueHook from "alova/vue";
+
 export const alovaInstance = createAlova({
-    baseURL: 'https://127.0.0.1:3000',
-    
-    // vue项目传入VueHook，react项目传入ReactHook
-    statesHook: VueHook,
-    
-    // 传一个请求适配器，GlobalFetch是我们提供的fetch api适配器
-    // 你想用axios也可以自定义一个适配器
-    requestAdapter: GlobalFetch(),
-    
-    // 是不是有熟悉的味道
-    // beforeRequest(config) {
-    //     config.headers.Authorization = 'Bearer ';
-    // },
-    async responsed(response) {
-      const json = await response.json();
-      if (json.code !== 200) {
-        throw new Error(json.message);
+  baseURL: "http://127.0.0.1:3300",
+  statesHook: VueHook,
+  requestAdapter: GlobalFetch(),
+  beforeRequest(config) {
+   
+    config.config.headers.Accept='application/json, text/plain, */*'
+    config.config.headers['Content-Type']='application/json'
+    if (sessionStorage.getItem("Bearer")) {
+      config.config.headers.Authorization = "Bearer "+sessionStorage.getItem("Bearer");
+    }
+  },
+  responded: {
+    // 请求成功的拦截器
+    // 当使用GlobalFetch请求适配器时，第一个参数接收Response对象
+    // 第二个参数为当前请求的method实例，你可以用它同步请求前后的配置信息
+    onSuccess: async (response, method) => {
+      if (response.status > 400) {
+        throw new Error(response.statusText);
       }
-      return json.data;
+      const json = await response.json();
+
+      // 解析的响应数据将传给method实例的transformData钩子函数，这些函数将在后续讲解
+      return json;
     },
+    onError: (err, method) => {
+      alert(error.message);
+    },
+  },
+  timeout: 50000,
 });

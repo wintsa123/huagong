@@ -1,13 +1,14 @@
 <template>
   <div class="h-screen w-screen flex flex-col">
     <t-layout>
-      <t-header >
-        <t-head-menu theme="light" default-value="item-1" :v-model="menu1Value" height="120px" @change="changeHandler" >
-          <template #logo> 
-            <h1 width="136" class="sm:text-lg   xl:mr-[40em] font-black xl:text-2xl ">化工有限公司</h1>
-          </template>          
+      <t-header>
+        <t-head-menu theme="light" default-value="item-1" :v-model="menu1Value" height="120px" @change="changeHandler">
+          <template #logo>
+            <h1  class="sm:text-lg   xl:mr-[40em] font-black xl:text-2xl min-w-max	 ">海鑫化工有限公司</h1>
+          </template>
 
-          <t-menu-item  v-for="item in items " :key="item.key" class="sm:text-lg xl:text-lg" :value="item.key" @click="navigateTo(item.key)">
+          <t-menu-item v-for="item in items " :key="item.key" class="sm:text-lg xl:text-lg" :value="item.key"
+            @click="navigateTo(item.key)">
             {{ item.label }} </t-menu-item>
           <template #operations>
             <a href="javascript:;">
@@ -20,38 +21,21 @@
       <t-content>
         <div><router-view></router-view> </div>
       </t-content>
-      <t-back-top
-      container=".baseListSmall-container"
-      :visible-height="0"
-      style="position: absolute"
-      :offset="['24px', '80px']"
-      :duration="2000"
-    ></t-back-top>
-      <t-footer class="mx-auto"> Copyright @ 2019-{{ new Date().getFullYear() }} Tencent. All Rights Reserved </t-footer>
+      <t-back-top container=".baseListSmall-container" :visible-height="0" style="position: absolute"
+        :offset="['24px', '80px']" :duration="2000"></t-back-top>
+      <t-footer class="mx-auto"> Copyright @ 2019-{{ new Date().getFullYear() }}  All Rights Reserved </t-footer>
     </t-layout>
 
-    <t-sticky-tool
-      :style="{ position: 'absolute', overflow: 'hidden' }"
-      shape="round"
-      :offset="['-56px', '150px']"
-      @click="handleClick"
-      @hover="handleHover"
-    >
-      
+    <t-sticky-tool class="z-40" shape="round" :offset="['-56px', '150px']" placement="right-bottom" @click="handleClick"
+      @hover="handleHover">
+
       <t-sticky-item label="English" :icon="renderTranIcon"> </t-sticky-item>
-      <t-sticky-item
-        label="与我沟通"
-        :icon="renderChatIcon"
-        :popup="renderPopup"
-        :popup-props="{ overlayInnerStyle: { padding: '4px', height: '128px' } }"
-      >
+      <t-sticky-item label="与我沟通" :icon="renderChatIcon" :popup="renderPopup"
+        :popup-props="{ overlayInnerStyle: { padding: '4px', height: '128px' } }">
       </t-sticky-item>
     </t-sticky-tool>
-    
+
   </div>
-
-   
-
 </template>
 
 
@@ -60,12 +44,12 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { ChatIcon, TranslateIcon } from 'tdesign-icons-vue-next';
 const router = useRouter();
-const size =150
+const size = 150
 const renderChatIcon = () => {
   return <ChatIcon />;
 };
 const renderTranIcon = () => {
-  return <TranslateIcon  />;
+  return <TranslateIcon />;
 };
 
 const renderPopup = () => {
@@ -77,13 +61,13 @@ const handleClick = (context) => {
 const handleHover = (context) => {
   console.log('hover', context);
 };
-const menu1Value = ref('item2');
+const menu1Value = ref('item1');
 const items = [
   { label: '首页', key: 'item-1' }, // 菜单项务必填写 key
   { label: '产品中心', key: 'item-2' },
   { label: '关于我们', key: 'item-3' },
   { label: '工厂环境', key: 'item-4' },
-  { label: '合伙人', key: 'item-5' },
+  { label: '合伙伙伴', key: 'item-5' },
   { label: '联系我们', key: 'item-6' }
 ]
 function navigateTo(key) {
@@ -91,13 +75,22 @@ function navigateTo(key) {
   switch (key) {
     case 'item-1':
       console.log(router)
-      router.push('/');
+      router.push('/home');
       break;
     case 'item-2':
-      router.push('/business');
+      router.push('/product');
       break;
     case 'item-3':
       router.push('/about');
+      break;
+    case 'item-4':
+      router.push('/HistroyView');
+      break;
+    case 'item-5':
+      router.push('/PartnersView');
+      break;
+    case 'item-6':
+      router.push('/callme');
       break;
     // 其他菜单项的路由跳转
     default:
@@ -127,5 +120,4 @@ function changeHandler(active) {
     }
   }
 }
-
 </style> 
