@@ -12,12 +12,52 @@ const router = createRouter({
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue')
+    },
+    {
+      path: '/product',
+      name: '产品中心',
+      component: () => import('../views/ProductView.vue')
+    },
+    {
+      path: '/callme',
+      name: '联系我们',
+      component: () => import('../views/Callme.vue')
+    },
+    {
+      path: '/HistroyView',
+      name: '环境',
+      component: () => import('../views/HistroyView.vue')
+    },
+    {
+      path: '/PartnersView',
+      name: '合作公司',
+      component: () => import('../views/PartnersView.vue')
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('../layout/admin.vue')
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/Login.vue')
     }
   ]
+})
+router.beforeEach( (to, from) => {
+  const sessionToken = sessionStorage.getItem('Bearer');
+  console.log(to)
+  if (
+    // 检查用户是否已登录
+    !sessionToken &&
+    // ❗️ 避免无限重定向
+    to.name == 'admin'
+  ) {
+    // 将用户重定向到登录页面
+    return to.name='login' 
+  }
 })
 
 export default router
