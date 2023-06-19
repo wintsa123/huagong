@@ -1,13 +1,13 @@
 <template>
-  <div class="h-screen w-screen flex flex-col">
+  <div >
     <t-layout>
       <t-header>
         <t-head-menu theme="light" default-value="item-1" :v-model="menu1Value" height="120px" @change="changeHandler">
           <template #logo>
-            <h1  class="sm:text-lg   xl:mr-[40em] font-black xl:text-2xl min-w-max	 ">海鑫化工有限公司</h1>
+            <h1  class="sm:text-lg ph:text-sm  ph:mr-[0em] xl:mr-[16em] font-black xl:text-2xl min-w-max	2xl:mr-[40em]  4k:mr-[50em] lg:mr-[15em] md:mr-[5em]">海鑫化工有限公司</h1>
           </template>
 
-          <t-menu-item v-for="item in items " :key="item.key" class="sm:text-lg xl:text-lg" :value="item.key"
+          <t-menu-item v-for="item in items " :key="item.key" class="sm:text-lg xl:text-lg ph:text-sm " :value="item.key"
             @click="navigateTo(item.key)">
             {{ item.label }} </t-menu-item>
           <template #operations>
