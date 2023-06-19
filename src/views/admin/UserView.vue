@@ -52,9 +52,12 @@ const {
 });
 
 const onSubmit = async ({ validateResult, firstError ,e}) => {
+    if (formData.password!=formData.rePassword){
+        MessagePlugin.warning('密码不一致');
+        return
+    }
     let a = await send()
     if (validateResult === true) {
-        sessionStorage.setItem('Bearer', a.data);
         if (a.code == 200) {
             MessagePlugin.success(a.message);
         } else {

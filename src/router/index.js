@@ -118,6 +118,15 @@ const router = createRouter({
       name: "login",
       component: () => import("../views/Login.vue"),
     },
+    {
+      path: '/404',
+      name: 'NotFound',
+      component: () => import("../layout/404.vue") // 404 页面的组件
+    },
+    {
+      path: '/:catchAll(.*)',
+      redirect: '/404' // 将所有未匹配的路径重定向到 404 页面
+    }
   ],
 });
 
