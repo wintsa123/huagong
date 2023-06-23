@@ -6,14 +6,22 @@ export const alovaInstance = createAlova({
   baseURL: "http://127.0.0.1:3300",
   statesHook: VueHook,
   requestAdapter: GlobalFetch(),
-  beforeRequest(config) {
-   
-    config.config.headers.Accept='application/json, text/plain, */*'
-    config.config.headers['Content-Type']='application/json'
+
+
+  beforeRequest: async (methods) => {
+    //  console.log(methods)
+    methods.config.headers.Accept = "application/json, text/plain, */*";
+    if (method.url=='/qiniu_data/get_token'&&sessionStorage.getItem("uploadToken")) {
+      methods.abort();
+    }
+
     if (sessionStorage.getItem("Bearer")) {
-      config.config.headers.Authorization = "Bearer "+sessionStorage.getItem("Bearer");
+        
+      methods.config.headers.Authorization =
+        "Bearer " + sessionStorage.getItem("Bearer");
     }
   },
+  
   responded: {
     // 请求成功的拦截器
     // 当使用GlobalFetch请求适配器时，第一个参数接收Response对象

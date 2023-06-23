@@ -21,7 +21,7 @@ export default {
 
       '2xl': '1536px',
       // => @media (min-width: 1536px) { ... }
-      '4k': '1800px',
+      '4k': '2560px',
     },
     colors: {
       transparent: 'transparent',

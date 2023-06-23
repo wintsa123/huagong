@@ -1,9 +1,9 @@
 <template>
   <t-layout class="h-screen">
     <t-aside width="auto">
-      <t-menu theme="light" :collapsed="collapsed2" default-value="dashboard" :v-model="menuValue" class="w-atuo h-full">
+      <t-menu theme="light" :collapsed="collapsed2"  v-model:value="menuValue" class="w-atuo h-full">
         <template #logo>
-          <h1 class="mx-auto sm:text-lg   xl: font-black xl:text-2xl min-w-max	 mx-auto" v-if="!collapsed2">海鑫化工管理系统</h1>
+          <h1 class="mx-auto sm:text-lg   xl: font-black xl:text-2xl min-w-max	 mx-auto" v-if="!collapsed2">懋鑫化工管理系统</h1>
 
         </template>
         <t-menu-item v-for="item in items" :key="item.key" :value="item.key" @click="navigateTo(item.key)">
@@ -46,8 +46,8 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 import { ref } from 'vue';
 const collapsed2 = ref(false);
+const menuValue = ref(sessionStorage.getItem('adminNav'));
 
-const menuValue = ref('dashboard');
 const changeCollapsed2 = () => {
   collapsed2.value = !collapsed2.value;
 };
@@ -68,6 +68,7 @@ const change = (e) => {
   console.log(e)
 }
 function navigateTo(key) {
+  sessionStorage.setItem('adminNav',key)
   // 执行路由跳转
   switch (key) {
     case 'dashboard':

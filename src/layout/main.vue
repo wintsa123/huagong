@@ -2,9 +2,9 @@
   <div >
     <t-layout>
       <t-header>
-        <t-head-menu theme="light" default-value="item-1" :v-model="menu1Value" height="120px" @change="changeHandler">
+        <t-head-menu theme="light" default-value="item-1" v-model:value="menu1Value" height="120px" @change="changeHandler">
           <template #logo>
-            <h1  class="sm:text-lg ph:text-sm  ph:mr-[0em] xl:mr-[16em] font-black xl:text-2xl min-w-max	2xl:mr-[40em]  4k:mr-[50em] lg:mr-[15em] md:mr-[5em]">海鑫化工有限公司</h1>
+            <h1  class="sm:text-lg ph:text-sm  ph:mr-[0em] xl:mr-[16em] font-black xl:text-2xl min-w-max	2xl:mr-[35em]  4k:mr-[60em] lg:mr-[8em]  ">广州懋鑫化工有限公司</h1>
           </template>
 
           <t-menu-item v-for="item in items " :key="item.key" class="sm:text-lg xl:text-lg ph:text-sm " :value="item.key"
@@ -42,7 +42,8 @@
 <script setup  lang="jsx">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { ChatIcon, TranslateIcon } from 'tdesign-icons-vue-next';
+import { ChatIcon, TranslateIcon  } from 'tdesign-icons-vue-next';
+
 const router = useRouter();
 const size = 150
 const renderChatIcon = () => {
@@ -61,16 +62,19 @@ const handleClick = (context) => {
 const handleHover = (context) => {
   console.log('hover', context);
 };
-const menu1Value = ref('item1');
+
+const menu1Value = ref(sessionStorage.getItem('HomeNav'));
+
 const items = [
   { label: '首页', key: 'item-1' }, // 菜单项务必填写 key
   { label: '产品中心', key: 'item-2' },
   { label: '关于我们', key: 'item-3' },
   { label: '工厂环境', key: 'item-4' },
-  { label: '合伙伙伴', key: 'item-5' },
+  { label: '合作伙伴', key: 'item-5' },
   { label: '联系我们', key: 'item-6' }
 ]
 function navigateTo(key) {
+  sessionStorage.setItem('HomeNav',key)
   // 执行路由跳转
   switch (key) {
     case 'item-1':
