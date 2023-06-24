@@ -12,7 +12,7 @@
     "@alova/scene-vue": "^1.1.0",
     "@dicebear/collection": "^6.0.4",
     "@dicebear/core": "^6.0.4",
-    "alova": "^2.6.1",
+    "alova": "^2.6.2",
     "npm": "^9.7.1",
     "pinia": "^2.0.36",
     "qiniu-js": "^3.4.1",

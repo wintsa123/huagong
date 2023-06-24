@@ -1,7 +1,7 @@
 <template>
   <t-layout class="h-screen">
     <t-aside width="auto">
-      <t-menu theme="light" :collapsed="collapsed2"  v-model:value="menuValue" class="w-atuo h-full">
+      <t-menu theme="light" :collapsed="collapsed2" default-value="dashboard" v-model:value="menuValue" class="w-atuo h-full">
         <template #logo>
           <h1 class="mx-auto sm:text-lg   xl: font-black xl:text-2xl min-w-max	 mx-auto" v-if="!collapsed2">懋鑫化工管理系统</h1>
 

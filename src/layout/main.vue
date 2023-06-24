@@ -2,7 +2,7 @@
   <div >
     <t-layout>
       <t-header>
-        <t-head-menu theme="light" default-value="item-1" v-model:value="menu1Value" height="120px" @change="changeHandler">
+        <t-head-menu theme="light" default-value="item-1"  v-model:value="menu1Value" height="120px" @change="changeHandler">
           <template #logo>
             <h1  class="sm:text-lg ph:text-sm  ph:mr-[0em] xl:mr-[16em] font-black xl:text-2xl min-w-max	2xl:mr-[35em]  4k:mr-[60em] lg:mr-[8em]  ">广州懋鑫化工有限公司</h1>
           </template>

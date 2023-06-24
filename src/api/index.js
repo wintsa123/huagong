@@ -7,21 +7,21 @@ export const alovaInstance = createAlova({
   statesHook: VueHook,
   requestAdapter: GlobalFetch(),
 
-
-  beforeRequest: async (methods) => {
-    //  console.log(methods)
+  beforeRequest(methods) {
     methods.config.headers.Accept = "application/json, text/plain, */*";
-    if (method.url=='/qiniu_data/get_token'&&sessionStorage.getItem("uploadToken")) {
+    if (
+      methods.url == "/qiniu_data/get_token" &&
+      !!sessionStorage.getItem("uploadToken")
+    ) {
       methods.abort();
     }
 
     if (sessionStorage.getItem("Bearer")) {
-        
       methods.config.headers.Authorization =
         "Bearer " + sessionStorage.getItem("Bearer");
     }
   },
-  
+
   responded: {
     // 请求成功的拦截器
     // 当使用GlobalFetch请求适配器时，第一个参数接收Response对象
@@ -31,13 +31,15 @@ export const alovaInstance = createAlova({
         throw new Error(response.statusText);
       }
       const json = await response.json();
-
-      // 解析的响应数据将传给method实例的transformData钩子函数，这些函数将在后续讲解
-      return json;
+     
+        // 解析的响应数据将传给method实例的transformData钩子函数，这些函数将在后续讲解
+        return json;
+      
     },
     onError: (err, method) => {
-      alert(error.message);
-    },
+      console.log(err.message);
+    }
+   
   },
   timeout: 50000,
 });

@@ -1152,10 +1152,10 @@ aggregate-error@^3.0.0:
     clean-stack "^2.0.0"
     indent-string "^4.0.0"
 
-alova@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.npmmirror.com/alova/-/alova-2.6.1.tgz"
-  integrity sha512-NjBX4Sa2Y5/DRMW3WcDShh/2c4+3FRX0gi4HJg9pIVj4FETCNkhMrcyw/yYZcAHgNLDknQEWl+6DzdMS/SKuGg==
+alova@^2.6.2:
+  version "2.6.2"
+  resolved "https://registry.npmmirror.com/alova/-/alova-2.6.2.tgz#4cf4e27edc78c7a17aef7c3d2ebcc7257de1719f"
+  integrity sha512-cbNdLt8E4XKamtJU2iFemi+m1dxauxlL5LiApizoKt8nIEPYlkqdqRe4pT3Vsh0Ncv4P5R4AvO3nU6Avy4jQcw==
 
 ansi-regex@^5.0.1:
   version "5.0.1"

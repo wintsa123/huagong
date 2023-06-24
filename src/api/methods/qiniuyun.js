@@ -15,12 +15,19 @@ import { alovaInstance } from "..";
 
 
 export const getToken = (params) =>
-  alovaInstance.Get("/qiniu_data/get_token", { params: params },{ beforeRequest(method) {
-    console.log(method)
-  }});
+  alovaInstance.Get("/qiniu_data/get_token", { params: params });
 
 export const fetchQiniuDataList = (params) =>
-  alovaInstance.Get("/qiniu_data/list", { params: params });
+  alovaInstance.Get("/qiniu_data/list", { params: params ,transformData(rawData, headers) {
+    // console.log(rawData.data)
+
+    return rawData.data.rows.map(item => {
+
+      return  item
+        
+      
+    });
+  }});
 
 export const fetchDiff = (params) =>
   alovaInstance.Get("/qiniu_data/diff", { params: params });

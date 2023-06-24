@@ -69,7 +69,7 @@ watch(token, (newValue, oldValue) => {
 // };
 
 
-const prefix = 'image';
+const prefix = 'homeImage';
 
 // res.url 图片地址；res.uploadTime 文件上传时间；res.error 上传失败的原因
 // const {
@@ -88,12 +88,12 @@ const formatRequest = (res) => {
   res['fname'] = prefix+res.file.name
   return res
 }
-const formatResponse = (res) => {
-  console.log(res)
+const formatResponse = async (res) => {
   if (!res.key) {
     res.error='token过期'
+    
     sessionStorage.removeItem('uploadToken');
-
+    await gettoken()
     return res
   }
   res['url']='http://rwnrmrlqg.hn-bkt.clouddn.com/'+res.key
