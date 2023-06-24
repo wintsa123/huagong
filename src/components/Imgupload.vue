@@ -69,7 +69,7 @@ watch(token, (newValue, oldValue) => {
 // };
 
 
-const prefix = 'homeImage';
+const prefix = 'image/';
 
 // res.url 图片地址；res.uploadTime 文件上传时间；res.error 上传失败的原因
 // const {

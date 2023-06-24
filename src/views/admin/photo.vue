@@ -69,9 +69,8 @@ const handlePanelChange = (val) => {
 const deletePhoto = async (id) => {
   let tmp = await delPhoto(id)
   if (tmp.code == 200) {
-
     updateState(fetchQiniuDataList(), oldListData => {
-      const index = oldListData.findIndex((item) => { item.id == id });
+      const index = oldListData.findIndex((item) => {return item.id === id });
       oldListData.splice(index, 1);
       return oldListData;
     });
@@ -111,10 +110,9 @@ onSuccess(e => {
     return QINIU_CDN_URL + e.qiniu_key
   })
   list.value = tmp
-  console.log(e)
+  listData.value=e.data.filter(item=>{return item.prefix=='homeImage/'})
   return e
 })
-console.log(listData.value)
 
 </script>
 <style scoped>
