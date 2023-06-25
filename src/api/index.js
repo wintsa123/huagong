@@ -1,6 +1,8 @@
 import { createAlova } from "alova";
 import GlobalFetch from "alova/GlobalFetch";
 import VueHook from "alova/vue";
+import {  useRouter  } from "vue-router";
+const router=useRouter()
 
 export const alovaInstance = createAlova({
   baseURL: "http://127.0.0.1:3300",
@@ -27,11 +29,16 @@ export const alovaInstance = createAlova({
     // 当使用GlobalFetch请求适配器时，第一个参数接收Response对象
     // 第二个参数为当前请求的method实例，你可以用它同步请求前后的配置信息
     onSuccess: async (response, method) => {
+      const json = await response.json();
       if (response.status > 400) {
+        if (json.message=='登录信息过期！'||json.message=='未登录') {
+          sessionStorage.removeItem("Bearer")
+          router.push('/login')
+         }
         throw new Error(response.statusText);
       }
-      const json = await response.json();
-     
+      
+    
         // 解析的响应数据将传给method实例的transformData钩子函数，这些函数将在后续讲解
         return json;
       

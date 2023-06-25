@@ -4,7 +4,7 @@
     animation="fade"
     :navigation="{ showSlideBtn: 'hover', size: 'large' }"
   >
-    <t-swiper-item v-for="item in items" :key="item.key">
+    <t-swiper-item v-for="item in listData" :key="item.id">
       <div class="demo-item w-screen">
         <t-image class="w-full aspect-[16/9]"  shape="round" :src="item.url"  position="center" fit="contain"  />
       </div>
@@ -13,34 +13,49 @@
 </template>
 
 <script setup lang="jsx">
-import { Tag } from "tdesign-vue-next";
-const fit='fill'
-const items = [
-  {
-    url: "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA1cCNPI.img?w=1920&h=1080&q=60&m=2&f=jpg",
-    key: "1",
+import { fetchQiniuDataList } from '../api/methods/qiniuyun.js'
+import { QINIU_CDN_URL } from "@/config.js";
+import { useRequest } from "alova";
+const { send, data: listData, onSuccess } = useRequest(() => fetchQiniuDataList(), {
+  initialData: {
+    "data": {
+      "nowPage": 1,
+      "pageSize": 4,
+      "hasMore": false,
+      "total": 4,
+      "rows": [
+        {
+          "id": 3,
+          "user_id": 1,
+          "prefix": "",
+          "bucket": "",
+          "qiniu_key": "",
+          "qiniu_hash": "",
+          "qiniu_fsize": "",
+          "qiniu_mimeType": "",
+          "qiniu_putTime": "",
+          "qiniu_type": "0",
+          "qiniu_status": "0",
+          "qiniu_md5": "",
+          "created_at": "",
+          "updated_at": "",
+          "deleted_at": null,
+          "url":"https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA1cCNPI.img?w=1920&h=1080&q=60&m=2&f=jpg"
+        }]
+    }
   },
-  {
-    url: "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AA1cCPXx.img?w=1920&h=1080&q=60&m=2&f=jpg",
-    key: "2",
-  },
-  {
-    url: "https://jmy-pic.baidu.com/0/pic/-1549038296_-62235561_751148276.jpg",
-    key: "3",
-  },
-];
-const label = () => (
-  <Tag
-    shape="mark"
-    theme="warning"
-    style={{
-      margin: "8px",
-      borderRadius: "3px",
-      background: "rgba(236,242,254,1)",
-      color: "rgba(0,82,217,1)",
-    }}
-  >
-    标签一
-  </Tag>
-);
+})
+onSuccess(e => {
+  listData.value=e.data.filter(item=>{return item.prefix=='homeImage/'})
+
+  listData.value=listData.value.map(e=>{
+    const modifiedObj = { ...e }; // 创建一个副本用于修改
+    modifiedObj.url=QINIU_CDN_URL+e.qiniu_key
+    return modifiedObj
+  })
+  console.log(listData.value)
+  return e
+})
+
+
 </script>

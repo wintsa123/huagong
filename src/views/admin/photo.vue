@@ -4,13 +4,13 @@
 <template>
   <t-row>
     <t-col>
-      <t-collapse :default-value="[0]" @change="handlePanelChange">
-        <t-collapse-panel destroy-on-collapse header="首页轮播图列表">
+      <t-collapse :default-value="[0]"  @change="handlePanelChange">
+        <t-collapse-panel key="1" header="首页轮播图列表">
           <div class="flex flex-wrap 	"><t-card bordered class="basis-1/5 m-8" v-for="(item, index) in listData"
               :key="item.id">
               <template #cover>
                 <div>
-                  <t-image-viewer :key="item.id" :default-index="index" :images="list">
+                  <t-image-viewer :key="item.id" :default-index="Number(index)" :images="list">
                     <template #trigger="{ open }">
                       <div class=" tdesign-demo-image-viewer__ui-image tdesign-demo-image-viewer__base ">
                         <img alt="test" :src="QINIU_CDN_URL + item.qiniu_key"
@@ -40,10 +40,12 @@
                 </t-row>
               </template>
             </t-card></div>
+            <div>新增轮播图
+              <t-row><t-col> <imgUpload prefix="homeImage/"></imgUpload></t-col></t-row>
+            
+            </div>
         </t-collapse-panel>
-        <t-collapse-panel destroy-on-collapse header="新增轮播图">
-
-        </t-collapse-panel>
+        
       </t-collapse>
     </t-col>
 
@@ -54,29 +56,17 @@
 import { DownloadIcon, DeleteIcon, BrowseIcon } from 'tdesign-icons-vue-next';
 import { ref, reactive } from "vue";
 import { useRequest, useWatcher, updateState } from "alova";
-import { fetchQiniuDataList, fetchDeleteQiniuData } from '../../api/methods/qiniuyun.js'
+import { fetchQiniuDataList, fetchDeleteQiniuData ,getToken} from '../../api/methods/qiniuyun.js'
 import { QINIU_CDN_URL } from "@/config.js";
+import  imgUpload  from "../../components/Imgupload.vue";
+import { actionDelegationMiddleware } from '@alova/scene-vue';
 
 const { send: delPhoto, data } = useRequest((id) => fetchDeleteQiniuData(id), {
   immediate: false
 })
-
-// const visible = ref(false);
-const currentItem = ref([1]);
-const handlePanelChange = (val) => {
-  currentItem.value = val;
-};
-const deletePhoto = async (id) => {
-  let tmp = await delPhoto(id)
-  if (tmp.code == 200) {
-    updateState(fetchQiniuDataList(), oldListData => {
-      const index = oldListData.findIndex((item) => {return item.id === id });
-      oldListData.splice(index, 1);
-      return oldListData;
-    });
-  }
-}
 const list = ref([]);
+const Expand = ref(true);
+
 const { send, data: listData, onSuccess } = useRequest(() => fetchQiniuDataList(), {
   initialData: {
     "data": {
@@ -103,16 +93,36 @@ const { send, data: listData, onSuccess } = useRequest(() => fetchQiniuDataList(
           "deleted_at": null
         }]
     }
-  }
+  },
+
+  force: isForce => {return !!isForce},
+
+  middleware: actionDelegationMiddleware('getHomephohto')
 })
 onSuccess(e => {
-  let tmp = e.data.map(e => {
+ 
+  listData.value=e.data.filter(item=>{return item.prefix=='homeImage/'})
+  let tmp = listData.value.map(e => {
     return QINIU_CDN_URL + e.qiniu_key
   })
   list.value = tmp
-  listData.value=e.data.filter(item=>{return item.prefix=='homeImage/'})
   return e
 })
+const currentItem = ref([1]);
+const handlePanelChange = (val) => {
+  currentItem.value = val;
+};
+const deletePhoto = async (id) => {
+  let tmp = await delPhoto(id)
+  if (tmp.code == 200) {
+    updateState(fetchQiniuDataList(), oldListData => {
+      const index = oldListData.findIndex((item) => {return item.id === id });
+      oldListData.splice(index, 1);
+      return oldListData;
+    });
+  }
+}
+
 
 </script>
 <style scoped>

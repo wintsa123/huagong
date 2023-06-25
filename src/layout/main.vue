@@ -57,10 +57,8 @@ const renderPopup = () => {
   return <img alt="TDesign Logo" width="120" height="120" src="https://tdesign.gtimg.com/site/site.jpg" />;
 };
 const handleClick = (context) => {
-  console.log('click', context);
 };
 const handleHover = (context) => {
-  console.log('hover', context);
 };
 
 const menu1Value = ref(sessionStorage.getItem('HomeNav'));
