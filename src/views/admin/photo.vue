@@ -104,7 +104,8 @@ const handlePanelChange = (val) => {
 const deletePhoto = async (id) => {
   let tmp = await delPhoto(id)
   if (tmp.code == 200) {
-    updateState(getlistByprefix(), oldListData => {
+    updateState(getlistByprefix('homeImage'), oldListData => {
+      console.log(oldListData)
       const index = oldListData.findIndex((item) => { return item.id === id });
       oldListData.splice(index, 1);
       return oldListData;
