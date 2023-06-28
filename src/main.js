@@ -9,6 +9,7 @@ import TDesign from 'tdesign-vue-next';
 import './style/index.js';
 
 const app = createApp(App)
+app.config.globalProperties.$router = router;
 
 app.use(createPinia())
 app.use(router)

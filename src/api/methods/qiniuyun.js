@@ -28,6 +28,10 @@ export const fetchQiniuDataList = (params) =>
     },
   });
 
+  export const getlistByprefix = (params) =>
+  alovaInstance.Get("/qiniu_data/listByprefix/"+params)
+
+
 export const fetchDiff = (params) =>
   alovaInstance.Get("/qiniu_data/diff", { params: params });
 // 上传图片

@@ -1,9 +1,9 @@
 import { createAlova } from "alova";
 import GlobalFetch from "alova/GlobalFetch";
 import VueHook from "alova/vue";
-import {  useRouter  } from "vue-router";
-const router=useRouter()
-
+import {  useRoute  } from "vue-router";
+const router=useRoute()
+console.log(this)
 export const alovaInstance = createAlova({
   baseURL: "http://127.0.0.1:3300",
   statesHook: VueHook,

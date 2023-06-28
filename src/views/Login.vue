@@ -20,9 +20,8 @@
 <script setup>
 import { reactive } from 'vue';
 import { MessagePlugin } from 'tdesign-vue-next';
-import { DesktopIcon, LockOnIcon } from 'tdesign-icons-vue-next';
 import { LoginUser } from '@/api/methods/user';
-import { useRequest, invalidateCache } from 'alova';
+import { useRequest } from 'alova';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
@@ -41,7 +40,7 @@ const {
   error,
   send:login,
   // 直接将Method实例传入即可发送请求
-} = useRequest(() => LoginUser(Number(formData.user),formData.password), {
+} = useRequest(() => LoginUser(formData.user,formData.password), {
   // 请求响应前，data的初始值
   immediate: false
 });

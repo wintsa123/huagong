@@ -85,7 +85,7 @@ const handleRequestFail = async (e) => {
   await gettoken()
 }
 const handleRequestSuccess = async (e) => {
-  await SyncDate(prefix, Number(1))
+  await SyncDate(prefix)
   await accessAction('getHomephohto', async ({ send }) => {
     // 调用组件A中的send函数
     await send('admin');

@@ -1,5 +1,4 @@
-<template><upload/></template>
+<template></template>
 
 <script setup>
-import upload from '@/components/Imgupload.vue'
 </script>

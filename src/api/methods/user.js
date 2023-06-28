@@ -3,12 +3,12 @@ import { alovaInstance } from "..";
 // 获取用户信息
 export const getUserInfo = (id) => alovaInstance.Get("/user/find/" + id, {});
 
-// 编辑用户信息
-export const LoginUser = (id, password) =>
+// 登录用户信息
+export const LoginUser = (username, password) =>
   alovaInstance.Post(
     "/user/login",
     {
-      id,
+      username,
       password,
     },
     {
