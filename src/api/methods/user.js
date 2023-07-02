@@ -18,9 +18,13 @@ export const LoginUser = (username, password) =>
     }
   );
 
-// 移除用户
+// 更改密码
 export const Changepwd = (oldpwd, newpwd) =>
-  alovaInstance.Put("/user/update_pwd", { oldpwd, newpwd });
+  alovaInstance.Put("/user/update_pwd", { oldpwd, newpwd },{
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+  });
 
 // 获取用户信息
 export const GetnowUser = (id) => alovaInstance.Get("/user/get_user_info", {});

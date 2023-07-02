@@ -15,7 +15,7 @@ export const QINIU_CDN_URL = 'http://rwnrmrlqg.hn-bkt.clouddn.com/';
 
 // export const POSTMESSAGE_TYPE = ['qq_login', 'github_login', 'login_expired'];
 
-export const QINIU_BUCKET = 'a12300114a'; // 七牛云bucket
+export const QINIU_BUCKET = 'sahuagong'; // 七牛云bucket
 export const QINIU_PREFIX = {
   'image/': 'image/',
   'homeimage/': 'homeimage/',

@@ -1,9 +1,8 @@
 import { createAlova } from "alova";
 import GlobalFetch from "alova/GlobalFetch";
 import VueHook from "alova/vue";
-import {  useRoute  } from "vue-router";
-const router=useRoute()
-console.log(this)
+import { MessagePlugin } from 'tdesign-vue-next';
+
 export const alovaInstance = createAlova({
   baseURL: "http://127.0.0.1:3300",
   statesHook: VueHook,
@@ -11,12 +10,12 @@ export const alovaInstance = createAlova({
 
   beforeRequest(methods) {
     methods.config.headers.Accept = "application/json, text/plain, */*";
-    if (
-      methods.url == "/qiniu_data/get_token" &&
-      !!sessionStorage.getItem("uploadToken")
-    ) {
-      methods.abort();
-    }
+    // if (
+    //   methods.url == "/qiniu_data/get_token" &&
+    //   !!sessionStorage.getItem("uploadToken")
+    // ) {
+    //   methods.abort();
+    // }
 
     if (sessionStorage.getItem("Bearer")) {
       methods.config.headers.Authorization =
@@ -31,17 +30,16 @@ export const alovaInstance = createAlova({
     onSuccess: async (response, method) => {
       const json = await response.json();
       if (response.status > 400) {
-        if (json.message=='登录信息过期！'||json.message=='未登录') {
+        if (json.message.includes('登录信息过期')||json.message.includes('未登录')) {
+          MessagePlugin.question(json.message)
           sessionStorage.removeItem("Bearer")
-          router.push('/login')
+          window.location.href = '/login'
          }
+
         throw new Error(response.statusText);
       }
-      
-    
         // 解析的响应数据将传给method实例的transformData钩子函数，这些函数将在后续讲解
         return json;
-      
     },
     onError: (err, method) => {
       console.log(err.message);

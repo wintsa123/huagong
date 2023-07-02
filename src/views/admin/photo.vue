@@ -1,6 +1,3 @@
-
-
-
 <template>
   <t-row>
     <t-col>
@@ -67,7 +64,7 @@ const { send: delPhoto, data } = useRequest((id) => fetchDeleteQiniuData(id), {
   immediate: false
 })
 const list = ref([]);
-const { send, data: listData, onSuccess } = useRequest(() => getlistByprefix('homeImage'), {
+const { send, data: listData, onSuccess } = useRequest(() => getlistByprefix({prefix:'homeImage/'}), {
   initialData: [{
     "data":{
       "id": "",
@@ -104,7 +101,7 @@ const handlePanelChange = (val) => {
 const deletePhoto = async (id) => {
   let tmp = await delPhoto(id)
   if (tmp.code == 200) {
-    updateState(getlistByprefix('homeImage'), oldListData => {
+    updateState(getlistByprefix({prefix:'homeImage/'}), oldListData => {
       console.log(oldListData)
       const index = oldListData.findIndex((item) => { return item.id === id });
       oldListData.splice(index, 1);

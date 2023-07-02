@@ -12,8 +12,6 @@
           </template>
           {{ item.label }}
         </t-menu-item>
-
-
         <t-submenu value="3">
           <template #icon>
             <t-icon name="edit-1" />
@@ -34,7 +32,7 @@
     </t-aside>
 
     <t-layout>
-      <t-content>
+      <t-content :style="{ backgroundColor: 'antiquewhite' }">
         <div><router-view></router-view></div>
       </t-content>
     </t-layout>

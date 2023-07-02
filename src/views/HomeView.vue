@@ -16,7 +16,7 @@
 import { getlistByprefix } from '../api/methods/qiniuyun.js'
 import { QINIU_CDN_URL } from "@/config.js";
 import { useRequest } from "alova";
-const { send, data: listData, onSuccess } = useRequest(() => getlistByprefix('homeImage'), {
+const { send, data: listData, onSuccess } = useRequest(() => getlistByprefix({prefix:'homeImage/'}), {
   initialData: [{
     "data":{
       "id": "",

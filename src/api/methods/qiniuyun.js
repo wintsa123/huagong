@@ -29,7 +29,7 @@ export const fetchQiniuDataList = (params) =>
   });
 
   export const getlistByprefix = (params) =>
-  alovaInstance.Get("/qiniu_data/listByprefix/"+params)
+  alovaInstance.Get("/qiniu_data/listByprefix/",{params})
 
 
 export const fetchDiff = (params) =>
