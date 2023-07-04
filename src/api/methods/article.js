@@ -16,9 +16,7 @@ export const ArticleDetail = (id) => {
 export const CreateArticle = (data) =>
   alovaInstance.Post(
     "/article/create",
-
     data,
-
     {
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
@@ -52,7 +50,7 @@ export const taglist = (params) =>
       rawData.data.rows=rawData.data.rows.map(e=>{
         let objtmp={}
         objtmp['label']=e.name
-        objtmp['value']=e.name
+        objtmp['value']=e.id
         objtmp['id']=e.id
 
         return objtmp

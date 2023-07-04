@@ -21,6 +21,8 @@
   </div>
 </template>
 <script setup>
+import { QINIU_CDN_URL } from "@/config.js";
+
 import { ref, watch, defineProps } from 'vue';
 import { getHash, splitFile } from '@/util/index.js';
 import { useRequest, invalidateCache, updateState } from 'alova';
@@ -32,7 +34,10 @@ import {
 } from '../api/methods/qiniuyun.js';
 const props = defineProps({
   prefix: String,
+  uploadImg:String
 });
+const emit = defineEmits(['update:uploadImg']);
+
 import { accessAction } from '@alova/scene-vue';
 
 const autoUpload = ref(true);
@@ -66,7 +71,8 @@ const formatRequest = (res) => {
   return res
 }
 const formatResponse = (res) => {
-  res['url'] = 'http://rwnrmrlqg.hn-bkt.clouddn.com/' + res.key
+  res['url'] = QINIU_CDN_URL + res.key
+  emit('update:uploadImg',res['url'])
   return res
 }
 
@@ -76,10 +82,13 @@ const handleRequestFail = async (e) => {
 }
 const handleRequestSuccess = async (e) => {
   await SyncDate(prefix)
-  await accessAction('getHomephohto', async ({ send }) => {
+  if (prefix=='homeImage/') {
+    await accessAction('getHomephohto', async ({ send }) => {
     // 调用组件A中的send函数
     await send('admin');
   });
+  }
+  
 }
 const handleRemove = async (e) => {
   //   console.log(e.file.name)

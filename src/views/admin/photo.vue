@@ -3,10 +3,10 @@
     <t-col>
       <t-collapse :default-value="[0]" @change="handlePanelChange">
         <t-collapse-panel key="1" header="首页轮播图列表">
-          <div class="flex flex-wrap 	"><t-card bordered class="basis-1/5 m-8" v-for="(item, index) in listData"
+          <div class="flex flex-wrap" v-if="!!listData"><t-card bordered class="basis-1/5 m-8" v-for="(item, index) in listData"
               :key="item.qiniu_key">
               <template #cover>
-                <div>
+                <div >
                   <t-image-viewer :key="item.qiniu_key" :default-index="Number(index)" :images="list">
                     <template #trigger="{ open }">
                       <div class=" tdesign-demo-image-viewer__ui-image tdesign-demo-image-viewer__base ">
@@ -41,7 +41,6 @@
             <t-row><t-col>
                 <imgUpload prefix="homeImage/"></imgUpload>
               </t-col></t-row>
-
           </div>
         </t-collapse-panel>
 
@@ -59,30 +58,12 @@ import { getlistByprefix, fetchDeleteQiniuData, getToken } from '../../api/metho
 import { QINIU_CDN_URL } from "@/config.js";
 import imgUpload from "../../components/Imgupload.vue";
 import { actionDelegationMiddleware } from '@alova/scene-vue';
-
 const { send: delPhoto, data } = useRequest((id) => fetchDeleteQiniuData(id), {
   immediate: false
 })
 const list = ref([]);
 const { send, data: listData, onSuccess } = useRequest(() => getlistByprefix({prefix:'homeImage/'}), {
-  initialData: [{
-    "data":{
-      "id": "",
-      "user_id": "",
-      "prefix": "",
-      "bucket": "",
-      "qiniu_key": "",
-      "qiniu_hash": "",
-      "qiniu_fsize": "",
-      "qiniu_mimeType": "",
-      "qiniu_putTime": "",
-      "qiniu_type": "",
-      "qiniu_status": "",
-      "qiniu_md5": "",
-      "created_at": "",
-      "updated_at": "",
-      "deleted_at": null
-    }}],
+ 
   force: isForce => { return !!isForce },
   middleware: actionDelegationMiddleware('getHomephohto')
 })
