@@ -1,28 +1,28 @@
 <template>
-    <t-form ref="form" :rules="FORM_RULES" :data="formData" :colon="true" @submit="onSubmit"   @reset="onReset" resetType="initial" 
-        class="mr-10 mt-10 mb-10">
+    <t-form ref="form" :rules="FORM_RULES" :data="formData" :colon="true" @submit="onSubmit" @reset="onReset"
+        resetType="initial" class="mr-10 mt-10 mb-10">
         <t-form-item label="标题" name="title">
             <t-input v-model.trim="formData.title" placeholder="请输入内容"></t-input>
         </t-form-item>
         <t-form-item label="简介" name="desc">
             <t-input v-model.trim="formData.desc" placeholder="请输入内容"></t-input>
         </t-form-item>
-        <t-form-item label="标签" name="tag">
-            <t-select v-model.trim="formData.tag" creatable filterable multiple  placeholder="输入按回车就可以创建/搜索哦"
+        <t-form-item label="标签" name="tags">
+            <t-select v-model.trim="formData.tags" creatable filterable multiple placeholder="输入按回车就可以创建/搜索哦"
                 :options="allTag.rows" :autoWidth="true" :clearable="true" style="width: 400px" @create="createOptions" />
         </t-form-item>
         <t-form-item label="权重" name="weight">
             <t-input-number v-model="formData.weight" theme="column" :max="100" :min="0"></t-input-number>
         </t-form-item>
         <t-form-item label="图片" name="imgFile">
-            <uploadImg prefix="articleImage/" v-model:uploadImg="formData.imgurl"/>
+            <uploadImg prefix="articleImage/" v-model:uploadImg="formData.imgurl" />
         </t-form-item>
-        <t-form-item label="内容" name="text">
-            <MdEditor v-model="formData.text" />
+        <t-form-item label="内容" name="content">
+            <MdEditor v-model="formData.content" @onUploadImg="onUploadImg" />
         </t-form-item>
         <t-form-item>
             <t-space size="small">
-                <t-button theme="primary" type="submit">提交</t-button>
+                <t-button theme="primary" type="submit" :loading="loading">提交</t-button>
                 <!-- 下方示例代码，有效，勿删 -->
                 <t-button theme="default" variant="base" type="reset">重置</t-button>
             </t-space>
@@ -31,19 +31,30 @@
 </template>
   
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, watch, toRef, toRefs } from 'vue';
 import { MessagePlugin } from 'tdesign-vue-next';
 import uploadImg from './Imgupload.vue';
 import { useRequest, updateState } from "alova";
-import { CreateTag, taglist,CreateArticle,UpdateArticle } from "@/api/methods/article";
+import { CreateTag, taglist, CreateArticle, UpdateArticle } from "@/api/methods/article";
+import { ArticleImg, getToken, fetchDeleteQiniuDataByQiniuKey } from "@/api/methods/qiniuyun.js";
+import { QINIU_CDN_URL } from "@/config.js";
 import { MdEditor } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
+import { useRoute } from 'vue-router'
 import { actionDelegationMiddleware } from '@alova/scene-vue';
 import * as _ from 'lodash'
-
-
 const text = ref('# Hello Editor');
-const { send: creatrtag, data } = useRequest((name, color) => CreateTag({ name, color }), { immediate: false })
+const props = defineProps({
+    data: Object,
+});
+//创建标签
+const route = useRoute();
+const { send: creatrtag } = useRequest((name, color) => CreateTag({ name, color }), { immediate: false })
+//创建文章
+const { send: creatArticle } = useRequest((data) => CreateArticle(data), { immediate: false })
+//更新文章
+const { send: updateArticle } = useRequest((data) => UpdateArticle(data), { immediate: false })
+const { send: upimg } = useRequest((data) => ArticleImg(data), { immediate: false })
 const { send, data: allTag } = useRequest(() => taglist(), {
     initialData: [{
         data: {
@@ -56,49 +67,137 @@ const { send, data: allTag } = useRequest(() => taglist(), {
     // force: isForce => { return !!isForce },
     // middleware: actionDelegationMiddleware('getTagList')
 })
-
+//获取token
+const {
+    send: gettoken,
+    data: token,
+    onSuccess: getTokenSuccess
+    // 直接将Method实例传入即可发送请求
+} = useRequest(() => getToken(), {
+});
+const { send: SyncDate, data, onSuccess: syncDone } = useRequest((prefix, force) => SyncToSql({ prefix, force }), { immediate: false });
+getTokenSuccess(e => {
+    e.data && sessionStorage.setItem('uploadToken', e.data.data);
+})
+const loading = ref(false);
+const form = ref(null);
 const FORM_RULES = { title: [{ required: true, message: '标题必填' }] };
-
+const datas = toRefs(props.data)
 const formData = reactive({
     title: '',
     content: '',
     weight: 0,
     desc: '',
-    text: '# 在这任意编辑哦，创意由你定',
-    tag: '',
-    imgurl:'',
-    status: false,
+    content: '# 在这任意编辑哦，创意由你定',
+    tags: '',
+    imgurl: '',
+    is_comment: 1,
+    status: 1,
+    types: [],
+    priority: 1
 });
-const form = ref(null);
-
+watch(() => props.data, (newData) => {
+    if (newData) {
+        formData.title = newData.title;
+        formData.desc = newData.desc;
+        formData.text = newData.content ? newData.content : formData.content;
+        formData.imgurl = newData.head_img;
+        formData.tags = [newData.tags[0].id];
+        formData.status = newData.status;
+        formData.types = [newData.types[0].id]
+    }
+});
 const createOptions = async (val) => {
     let result = await creatrtag(val, 'green')
     await updateState(taglist(), (todoList) => {
-        console.log(todoList.rows)
         if (_.some(todoList.rows, { value: val })) { return todoList }
         todoList.rows.push({ label: val, value: result.data, id: result.data })
         return todoList
     });
-    formData.tag[formData.tag.length-1]=result.data 
+    formData.tags[formData.tags.length - 1] = result.data
     // await accessAction('getTagList', async ({ send }) => {
     //     // 调用组件A中的send函数
     //     await send('getTag');
     // });
 };
-
-
-const onSubmit = ({ validateResult, firstError }) => {
+const onSubmit = async ({ validateResult, firstError }) => {
     if (validateResult === true) {
+        loading.value = true
+        // if (route.query.id) {
+
+        // } else {
+
+        let result = await updateArticle({
+            id: props.data.id,
+            title: formData.title,
+            content: formData.text,
+            desc: formData.desc,
+            head_img: formData.imgurl,
+            is_comment: formData.is_comment,
+            status: formData.status,
+            tags: formData.tags,
+            types: formData.types,
+            priority: formData.priority,
+        })
+        console.log(result)
+        loading.value = false
+        //提交
+        // let result = await creatArticle({
+        //     title: formData.title,
+        //     content: formData.text,
+        //     desc: formData.desc,
+        //     head_img: formData.imgurl,
+        //     is_comment: formData.is_comment,
+        //     status: formData.status,
+        //     tags: formData.tag,
+        //     types: formData.types,
+        //     priority: formData.priority,
+        // })
+        // loading.value = false
+
+        // }
+
         MessagePlugin.success('提交成功');
     } else {
-        console.log('Validate Errors: ', firstError, validateResult);
         MessagePlugin.warning(firstError);
     }
 };
 const onReset = () => {
-  MessagePlugin.success('重置成功');
+    formData.title = props.data.title;
+    formData.desc = props.data.desc;
+    formData.text = props.data.content ? props.data.content : formData.content;
+    formData.imgurl = props.data.head_img;
+    formData.tags = props.data.tags;
+    formData.status = props.data.status;
+    formData.types = [props.data.types[0].id]
+    MessagePlugin.success('重置成功');
 };
-
+getTokenSuccess(e => {
+    e.data && sessionStorage.setItem('uploadToken', e.data.data);
+})
+const onUploadImg = async (files, callback) => {
+    await gettoken()
+    const result = await Promise.all(
+        files.map((file) => {
+            return new Promise(async (rev, rej) => {
+                const form = new FormData();
+                form.append('token', sessionStorage.getItem('uploadToken'));
+                form.append('key', 'article/' + file.name);
+                form.append('fname', 'article/' + file.name);
+                form.append('file', file);
+                // rev(upimg(form))
+                try {
+                    const res = await upimg(form);
+                    await SyncDate('article/')
+                    rev(res);
+                } catch (error) {
+                    rej(error);
+                }
+            });
+        })
+    );
+    callback(result.map((item) => QINIU_CDN_URL + item.data.key));
+};
 
 
 </script >

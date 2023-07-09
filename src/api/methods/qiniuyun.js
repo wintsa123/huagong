@@ -11,7 +11,7 @@
 // qiniu_type?: number;
 // qiniu_status?: number;
 // qiniu_md5?: string;
-import { alovaInstance } from "..";
+import { alovaInstance ,uploadAlova} from "..";
 
 export const getToken = (params) =>
   alovaInstance.Get("/qiniu_data/get_token", { params: params });
@@ -74,3 +74,8 @@ export const SyncToSql = (prefix) =>
   alovaInstance.Post("/qiniu_data/sync_qiniu_data", prefix, {
     headers: { "Content-Type": "application/json; charset=utf-8" },
   });
+  export const ArticleImg = (param) =>
+  uploadAlova.Post("/", param, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+

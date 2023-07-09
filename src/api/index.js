@@ -2,6 +2,7 @@ import { createAlova } from "alova";
 import GlobalFetch from "alova/GlobalFetch";
 import VueHook from "alova/vue";
 import { MessagePlugin } from 'tdesign-vue-next';
+import { axiosRequestAdapter } from '@alova/adapter-axios';
 
 export const alovaInstance = createAlova({
   baseURL: "http://127.0.0.1:3300",
@@ -47,4 +48,12 @@ export const alovaInstance = createAlova({
    
   },
   timeout: 50000,
+});
+
+// upload alova instance
+export const uploadAlova = createAlova({
+  baseURL: 'http://upload-z2.qiniup.com',
+  statesHook: VueHook,
+  shareRequest: false,
+  requestAdapter: axiosRequestAdapter()
 });

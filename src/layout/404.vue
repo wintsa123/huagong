@@ -1,19 +1,32 @@
 <template>
-    <div class="not-found-container">
-      <td-row align="middle" justify="center" class="not-found-content">
-        <td-col :span="12">
-          <td-typography.Title level="2" class="not-found-title">404</td-typography.Title>
-          <td-typography.Text class="not-found-description">
-            抱歉，页面资源没找到
-          </td-typography.Text>
-          <t-button type="primary" class="not-found-button" @click="goHome">点我回主页</t-button>
-        </td-col>
-      </td-row>
+     <div class="content">
+    <div class="page-404">
+        <h1>404</h1>
+        <p>没找到这个页面哦</p>
+        <p class="info">
+           请联系管理员哦
+        </p>
+        <button class="go-home btn" @click="goHome">回家</button>
     </div>
+    <div class="astronaut">
+      <!-- <t-image
+          src="../assets/astronaut.png"
+          :style="{ width: '120px', height: '120px' }"
+        /> -->
+        <img :src="astronautImg" class="astronaut-img" alt="">
+    </div>
+  </div>
   </template>
   
   <script>
+        import astronautImg from '../assets/astronaut.png';
+
   export default {
+    data(){
+      return {
+        astronautImg:astronautImg
+      }
+    },
     methods: {
       goHome() {
         // Redirect to home page
@@ -24,27 +37,130 @@
   </script>
   
   <style scoped>
-  .not-found-container {
-    height: 100vh;
+@font-face {
+  font-family: dogica;
+  src: url(./asset/font/dogica.ttf);
+}
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: url(./asset/bg.png);
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.content {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+.content .astronaut {
+  transform: rotate(0deg) translate(0, -18%);
+  animation-name: PAnimation;
+  animation-direction: alternate;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-duration: 3s;
+}
+.content .page-404 {
+  width: 40vw;
+  font-family: dogica;
+  z-index: 1;
+}
+.content .page-404 h1 {
+  font-size: 5vw;
+  margin-bottom: 30px;
+}
+.content .page-404 p {
+  font-size: 1vw;
+  margin: 10px 0;
+  line-height: 2vw;
+}
+.content .page-404 .btn {
+  width: 10vw;
+  height: 50px;
+  border-radius: 30px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+  background-color: #fff;
+  color: #000;
+  border: 2px solid #000;
+  font-size: 1vw;
+}
+.content .page-404 .btn:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+@media (min-width: 1024px) {
+  .content {
+    position: relative;
     display: flex;
+  }
+  .content .astronaut {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+  }
+  .content .page-404 {
+    width: 40vw;
+    position: absolute;
+    left: 10%;
+    top: 40%;
+    transform: translateY(-50%);
+  }
+}
+@media (max-width: 1024px) {
+  .content {
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
   }
-  
-  .not-found-content {
-    text-align: center;
+  .content .page-404 {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10vh;
   }
-  
-  .not-found-title {
-    font-size: 64px;
+  .content .page-404 h1 {
+    font-size: 10vw;
+    margin-bottom: 30px;
   }
-  
-  .not-found-description {
-    margin-bottom: 24px;
+  .content .page-404 p {
+    font-size: 3vw;
+    line-height: 6vw;
   }
-  
-  .not-found-button {
-    font-size: 18px;
+  .content .page-404 .info {
+    display: none;
   }
+  .content .page-404 .btn {
+    width: 30vw;
+  }
+  .astronaut {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .astronaut .astronaut-img {
+    width: 70%;
+    height: 80%;
+    transform: translateY(40%);
+  }
+}
+@keyframes PAnimation {
+  0% {
+    transform: rotate(0deg) translate(0, -15%);
+  }
+  100% {
+    transform: rotate(10deg) translate(0, -18%);
+  }
+}
   </style>
   

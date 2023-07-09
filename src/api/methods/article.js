@@ -10,29 +10,36 @@ export const KeyArticleList = (params) => {
 };
 //根据id获取
 export const ArticleDetail = (id) => {
-  return alovaInstance.Get(`/article/find/${id}`);
+  return alovaInstance.Get(`/article/find/${id}`,{ transformData(rawData, headers) {
+    return rawData.data;
+  }});
 };
 //创建文章
 export const CreateArticle = (data) =>
-  alovaInstance.Post(
-    "/article/create",
-    data,
-    {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-      },
-    }
-  );
+  alovaInstance.Post("/article/create", data, {
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+    },
+  });
 //更改文章
 export const UpdateArticle = (data) =>
-  alovaInstance.Put(`/article/update/${data.id}`, data);
+  alovaInstance.Put(`/article/update/${data.id}`, data, {headers: {
+    "Content-Type": "application/json;charset=UTF-8",
+  }});
 //删除文章
 export const DeleteArticle = (id) =>
   alovaInstance.Delete(`/article/delete/${id}`);
-//根据typename获取文章总数以及文章id
 
+//根据typename获取文章总数以及文章id
 export const ArticleType = (params) =>
-  alovaInstance.Get("/article/type", { params });
+  alovaInstance.Get("/article/type", {
+    params,
+    transformData(rawData, headers) {
+      return rawData.data.rows.map((item) => {
+        return item.article_id;
+      });
+    },
+  });
 
 //标签
 //创建标签
@@ -47,14 +54,14 @@ export const taglist = (params) =>
   alovaInstance.Get("/tag/list", {
     params,
     transformData(rawData, headers) {
-      rawData.data.rows=rawData.data.rows.map(e=>{
-        let objtmp={}
-        objtmp['label']=e.name
-        objtmp['value']=e.id
-        objtmp['id']=e.id
+      rawData.data.rows = rawData.data.rows.map((e) => {
+        let objtmp = {};
+        objtmp["label"] = e.name;
+        objtmp["value"] = e.id;
+        objtmp["id"] = e.id;
 
-        return objtmp
-      })
-      return rawData.data
+        return objtmp;
+      });
+      return rawData.data;
     },
   });

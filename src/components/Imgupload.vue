@@ -23,7 +23,7 @@
 <script setup>
 import { QINIU_CDN_URL } from "@/config.js";
 
-import { ref, watch, defineProps } from 'vue';
+import { ref, watch } from 'vue';
 import { getHash, splitFile } from '@/util/index.js';
 import { useRequest, invalidateCache, updateState } from 'alova';
 import {
@@ -34,15 +34,22 @@ import {
 } from '../api/methods/qiniuyun.js';
 const props = defineProps({
   prefix: String,
-  uploadImg:String
+  uploadImg: String
 });
 const emit = defineEmits(['update:uploadImg']);
-
 import { accessAction } from '@alova/scene-vue';
 
 const autoUpload = ref(true);
-const files = ref([]);
+const files = ref();
 const prefix = props.prefix
+watch(() => props.uploadImg, (newData) => {
+  if (newData) {
+    files.value = [{
+      name: newData.match(/\/(\w+\.\w+)$/)[1], url: newData, status: 'success',
+    }];
+
+  }
+});
 //根据名字删除
 const {
   send: delKey,
@@ -59,7 +66,7 @@ const {
 } = useRequest(() => getToken(), {
 });
 //同步
-const { send: SyncDate, data,onSuccess: syncDone} = useRequest((prefix, force) => SyncToSql({ prefix, force }), { immediate: false});
+const { send: SyncDate, data, onSuccess: syncDone } = useRequest((prefix, force) => SyncToSql({ prefix, force }), { immediate: false });
 getTokenSuccess(e => {
   e.data && sessionStorage.setItem('uploadToken', e.data.data);
 })
@@ -72,7 +79,7 @@ const formatRequest = (res) => {
 }
 const formatResponse = (res) => {
   res['url'] = QINIU_CDN_URL + res.key
-  emit('update:uploadImg',res['url'])
+  emit('update:uploadImg', res['url'])
   return res
 }
 
@@ -82,17 +89,16 @@ const handleRequestFail = async (e) => {
 }
 const handleRequestSuccess = async (e) => {
   await SyncDate(prefix)
-  if (prefix=='homeImage/') {
+  if (prefix == 'homeImage/') {
     await accessAction('getHomephohto', async ({ send }) => {
-    // 调用组件A中的send函数
-    await send('admin');
-  });
+      // 调用组件A中的send函数
+      await send('admin');
+    });
   }
-  
+
 }
 const handleRemove = async (e) => {
-  //   console.log(e.file.name)
-  // await delKey(e.file.name)
+
 }
 const seesion = { Authorization: "Bearer " + sessionStorage.getItem("Bearer") }
 </script>

@@ -3,8 +3,8 @@
         <t-layout>
             <t-layout>
                 <t-content>Content</t-content>
-                <t-aside class="h-screen w-1/4">
-                    <t-card :title="'欢迎回来，'+data.data.roles[0].role_name" hover-shadow>
+                <t-aside class="h-screen w-1/4" >
+                    <t-card  :title="'欢迎回来，' + data.data.roles[0].role_name" hover-shadow>
                         <t-row>
                             <t-col :span="12">
                                 <div v-html="svg" class="flex mx-auto"></div>
@@ -13,7 +13,7 @@
 
                         <t-row>
                             <t-col>
-                                <div >文章总数：{{ data.data.articles_total }}</div>
+                                <div>文章总数：{{ data.data.articles_total }}</div>
                             </t-col>
                         </t-row>
                         <t-row>
@@ -41,19 +41,19 @@
 </template>
 <script setup lang="jsx">
 import { createAvatar } from '@dicebear/core';
-import { adventurerNeutral  } from '@dicebear/collection';
+import { adventurerNeutral } from '@dicebear/collection';
 
 import { useRequest } from 'alova';
 import { GetnowUser } from '@/api/methods/user.js';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const avatar = createAvatar(adventurerNeutral, {
-  seed: 'Felix',
-  flip: false,
-  size:60,
-  radius: 30
+    seed: 'Felix',
+    flip: false,
+    size: 60,
+    radius: 30
 
-  // ... other options
+    // ... other options
 });
 
 const svg = avatar.toString();
@@ -62,13 +62,14 @@ const {
     // 它是一个Ref类型的值，你可以通过loading.value访问它，或直接绑定到界面中
     loading,
     // 响应数据，同样是Ref值
-    data:data,
+    data,
 } = useRequest(GetnowUser, {
     immediate: true,
-    initialData:{data:{updated_at:'****',receive_comments_total:'0',articles_total:'0',roles:[{role_name:'admin'}]}}
+    initialData: { data:   { updated_at: '****', receive_comments_total: '0', articles_total: '0', roles: [{ role_name: 'admin' }] }}
     // 请求响应前，data的初始值
 });
-let clickHandler=()=>{
+console.log(data)
+let clickHandler = () => {
     sessionStorage.removeItem('Bearer');
     router.push('/login');
 }
