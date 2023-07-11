@@ -22,14 +22,12 @@
 </template>
 <script setup>
 import { QINIU_CDN_URL } from "@/config.js";
-
 import { ref, watch } from 'vue';
 import { getHash, splitFile } from '@/util/index.js';
 import { useRequest, invalidateCache, updateState } from 'alova';
 import {
   getToken,
   SyncToSql,
-
   fetchDeleteQiniuDataByQiniuKey
 } from '../api/methods/qiniuyun.js';
 const props = defineProps({
@@ -40,7 +38,7 @@ const emit = defineEmits(['update:uploadImg']);
 import { accessAction } from '@alova/scene-vue';
 
 const autoUpload = ref(true);
-const files = ref();
+const files = ref([]);
 const prefix = props.prefix
 watch(() => props.uploadImg, (newData) => {
   if (newData) {

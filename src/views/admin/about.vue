@@ -1,5 +1,7 @@
 <template>
-  <edit :data="!!data?data:{}" />
+  <div>
+    <edit :data="data" />
+  </div>
 </template>
   
 <script setup>

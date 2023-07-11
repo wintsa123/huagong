@@ -46,7 +46,6 @@
 
       </t-collapse>
     </t-col>
-
   </t-row>
 </template>
   

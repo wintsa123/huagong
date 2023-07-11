@@ -1,24 +1,24 @@
 <template>
     <t-form ref="form" :rules="FORM_RULES" :data="formData" :colon="true" @submit="onSubmit" @reset="onReset"
-        resetType="initial" class="mr-10 mt-10 mb-10">
+        :disabled="disabled" resetType="initial" class="mr-10 mt-10 mb-10">
         <t-form-item label="标题" name="title">
             <t-input v-model.trim="formData.title" placeholder="请输入内容"></t-input>
         </t-form-item>
-        <t-form-item label="简介" name="desc">
+        <t-form-item label="简介" name="desc" v-if="shouldDisplayDescFormItem">
             <t-input v-model.trim="formData.desc" placeholder="请输入内容"></t-input>
         </t-form-item>
-        <t-form-item label="标签" name="tags">
+        <t-form-item label="标签" name="tags" v-if="shouldDisplayTagsFormItem">
             <t-select v-model.trim="formData.tags" creatable filterable multiple placeholder="输入按回车就可以创建/搜索哦"
                 :options="allTag.rows" :autoWidth="true" :clearable="true" style="width: 400px" @create="createOptions" />
         </t-form-item>
-        <t-form-item label="权重" name="weight">
+        <t-form-item label="权重" v-if="shouldDisplayWeightFormItem" name="weight">
             <t-input-number v-model="formData.weight" theme="column" :max="100" :min="0"></t-input-number>
         </t-form-item>
-        <t-form-item label="图片" name="imgFile">
+        <t-form-item label="图片" name="imgFile" v-if="shouldDisplayImageFormItem">
             <uploadImg prefix="articleImage/" v-model:uploadImg="formData.imgurl" />
         </t-form-item>
-        <t-form-item label="内容" name="content">
-            <MdEditor v-model="formData.content" @onUploadImg="onUploadImg" />
+        <t-form-item label="内容" name="content" >
+            <MdEditor v-model="formData.content" @onUploadImg="onUploadImg" :disabled="disabled" />
         </t-form-item>
         <t-form-item>
             <t-space size="small">
@@ -31,12 +31,12 @@
 </template>
   
 <script setup>
-import { ref, reactive, watch, toRef, toRefs } from 'vue';
+import { ref, reactive, watch, toRef, toRefs, computed } from 'vue';
 import { MessagePlugin } from 'tdesign-vue-next';
 import uploadImg from './Imgupload.vue';
 import { useRequest, updateState } from "alova";
 import { CreateTag, taglist, CreateArticle, UpdateArticle } from "@/api/methods/article";
-import { ArticleImg, getToken, fetchDeleteQiniuDataByQiniuKey } from "@/api/methods/qiniuyun.js";
+import { ArticleImg, getToken, fetchDeleteQiniuDataByQiniuKey,SyncToSql } from "@/api/methods/qiniuyun.js";
 import { QINIU_CDN_URL } from "@/config.js";
 import { MdEditor } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
@@ -46,7 +46,32 @@ import * as _ from 'lodash'
 const text = ref('# Hello Editor');
 const props = defineProps({
     data: Object,
+    disabled: Boolean
 });
+const shouldDisplayImageFormItem = computed(() => {
+    console.log(props.data)
+    if (!props.data) return false;
+    const excludedIds = [2, 3, 4, 5];
+    return !excludedIds.includes(props.data?.id);
+})
+const shouldDisplayWeightFormItem = computed(() => {
+    if (!props.data) return false;
+
+    const excludedIds = [2, 3, 5];
+    return !excludedIds.includes(props.data?.id);
+})
+const shouldDisplayDescFormItem = computed(() => {
+    if (!props.data) return false;
+
+    const excludedIds = [2, 3, 5];
+    return !excludedIds.includes(props.data?.id);
+})
+const shouldDisplayTagsFormItem = computed(() => {
+    if (!props.data) return false;
+
+    const excludedIds = [2, 3,4, 5];
+    return !excludedIds.includes(props.data?.id);
+})
 //创建标签
 const route = useRoute();
 const { send: creatrtag } = useRequest((name, color) => CreateTag({ name, color }), { immediate: false })
@@ -81,6 +106,8 @@ getTokenSuccess(e => {
 })
 const loading = ref(false);
 const form = ref(null);
+const disabled = ref(props.disabled);
+
 const FORM_RULES = { title: [{ required: true, message: '标题必填' }] };
 const datas = toRefs(props.data)
 const formData = reactive({
@@ -102,10 +129,14 @@ watch(() => props.data, (newData) => {
         formData.desc = newData.desc;
         formData.text = newData.content ? newData.content : formData.content;
         formData.imgurl = newData.head_img;
-        formData.tags = [newData.tags[0].id];
+        formData.tags = [newData.tags[0]?.id];
         formData.status = newData.status;
         formData.types = [newData.types[0].id]
     }
+});
+watch(() => props.disabled, (newData) => {
+    console.log(newData)
+    disabled.value = newData;
 });
 const createOptions = async (val) => {
     let result = await creatrtag(val, 'green')
@@ -182,13 +213,13 @@ const onUploadImg = async (files, callback) => {
             return new Promise(async (rev, rej) => {
                 const form = new FormData();
                 form.append('token', sessionStorage.getItem('uploadToken'));
-                form.append('key', 'article/' + file.name);
-                form.append('fname', 'article/' + file.name);
+                form.append('key', 'articleImage/' + file.name);
+                form.append('fname', 'articleImage/' + file.name);
                 form.append('file', file);
                 // rev(upimg(form))
                 try {
                     const res = await upimg(form);
-                    await SyncDate('article/')
+                    await SyncDate('articleImage/')
                     rev(res);
                 } catch (error) {
                     rej(error);
