@@ -1,7 +1,7 @@
 <template>
     <t-form ref="form" :rules="FORM_RULES" :data="formData" :colon="true" @submit="onSubmit" @reset="onReset"
         :disabled="disabled" resetType="initial" class="mr-10 mt-10 mb-10">
-        <t-form-item label="标题" name="title">
+        <t-form-item label="标题" name="title" v-if="shouldDisplayTitleFormItem">
             <t-input v-model.trim="formData.title" placeholder="请输入内容"></t-input>
         </t-form-item>
         <t-form-item label="简介" name="desc" v-if="shouldDisplayDescFormItem">
@@ -11,8 +11,8 @@
             <t-select v-model.trim="formData.tags" creatable filterable multiple placeholder="输入按回车就可以创建/搜索哦"
                 :options="allTag.rows" :autoWidth="true" :clearable="true" style="width: 400px" @create="createOptions" />
         </t-form-item>
-        <t-form-item label="权重" v-if="shouldDisplayWeightFormItem" name="weight">
-            <t-input-number v-model="formData.weight" theme="column" :max="100" :min="0"></t-input-number>
+        <t-form-item label="权重" v-if="shouldDisplaypriorityFormItem" name="priority">
+            <t-input-number v-model="formData.priority" theme="column" :max="100" :min="0"></t-input-number>
         </t-form-item>
         <t-form-item label="图片" name="imgFile" v-if="shouldDisplayImageFormItem">
             <uploadImg prefix="articleImage/" v-model:uploadImg="formData.imgurl" />
@@ -49,26 +49,27 @@ const props = defineProps({
     disabled: Boolean
 });
 const shouldDisplayImageFormItem = computed(() => {
-    console.log(props.data)
     if (!props.data) return false;
     const excludedIds = [2, 3, 4, 5];
     return !excludedIds.includes(props.data?.id);
 })
-const shouldDisplayWeightFormItem = computed(() => {
+const shouldDisplaypriorityFormItem = computed(() => {
     if (!props.data) return false;
-
-    const excludedIds = [2, 3, 5];
+    const excludedIds = [2, 3,4, 5];
     return !excludedIds.includes(props.data?.id);
 })
 const shouldDisplayDescFormItem = computed(() => {
     if (!props.data) return false;
-
-    const excludedIds = [2, 3, 5];
+    const excludedIds = [2, 3, 4,5];
     return !excludedIds.includes(props.data?.id);
 })
 const shouldDisplayTagsFormItem = computed(() => {
     if (!props.data) return false;
-
+    const excludedIds = [2, 3,4, 5];
+    return !excludedIds.includes(props.data?.id);
+})
+const shouldDisplayTitleFormItem = computed(() => {
+    if (!props.data) return false;
     const excludedIds = [2, 3,4, 5];
     return !excludedIds.includes(props.data?.id);
 })
@@ -107,35 +108,21 @@ getTokenSuccess(e => {
 const loading = ref(false);
 const form = ref(null);
 const disabled = ref(props.disabled);
-
 const FORM_RULES = { title: [{ required: true, message: '标题必填' }] };
-const datas = toRefs(props.data)
 const formData = reactive({
-    title: '',
-    content: '',
-    weight: 0,
-    desc: '',
-    content: '# 在这任意编辑哦，创意由你定',
-    tags: '',
-    imgurl: '',
-    is_comment: 1,
-    status: 1,
-    types: [],
-    priority: 1
+    title: props.data.title||'',
+    desc: props.data.desc||'',
+    content: props.data.content ? props.data.content : '# 在这任意编辑哦，创意由你定',
+    tags:[props.data.tags[0]?.id]|| '',
+    imgurl: props.data.head_img||'',
+    is_comment: props.data.is_comment||1,
+    status: props.data.status||1,
+    types: [props.data.types[0].id]|| [],
+    priority: props.data.priority||1
 });
-watch(() => props.data, (newData) => {
-    if (newData) {
-        formData.title = newData.title;
-        formData.desc = newData.desc;
-        formData.text = newData.content ? newData.content : formData.content;
-        formData.imgurl = newData.head_img;
-        formData.tags = [newData.tags[0]?.id];
-        formData.status = newData.status;
-        formData.types = [newData.types[0].id]
-    }
-});
+
+
 watch(() => props.disabled, (newData) => {
-    console.log(newData)
     disabled.value = newData;
 });
 const createOptions = async (val) => {
@@ -194,13 +181,13 @@ const onSubmit = async ({ validateResult, firstError }) => {
     }
 };
 const onReset = () => {
-    formData.title = props.data.title;
-    formData.desc = props.data.desc;
-    formData.text = props.data.content ? props.data.content : formData.content;
-    formData.imgurl = props.data.head_img;
-    formData.tags = props.data.tags;
-    formData.status = props.data.status;
-    formData.types = [props.data.types[0].id]
+    // formData.title = props.data.title;
+    // formData.desc = props.data.desc;
+    // formData.text = props.data.content ? props.data.content : formData.content;
+    // formData.imgurl = props.data.head_img;
+    // formData.tags = props.data.tags;
+    // formData.status = props.data.status;
+    // formData.types = [props.data.types[0].id]
     MessagePlugin.success('重置成功');
 };
 getTokenSuccess(e => {

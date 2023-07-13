@@ -34,11 +34,7 @@ export const DeleteArticle = (id) =>
 export const ArticleType = (params) =>
   alovaInstance.Get("/article/type", {
     params,
-    transformData(rawData, headers) {
-      return rawData.data.rows.map((item) => {
-        return item.article_id;
-      });
-    },
+    
   });
 
 //标签
