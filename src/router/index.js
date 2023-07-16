@@ -105,11 +105,16 @@ const router = createRouter({
           name: "callme联系我们",
           component: () => import("../views/admin/callme.vue"),
         },
-     
         {
           path: "/admin/edit/changehome",
           name: "photo更改图片",
           component: () => import("../views/admin/photo.vue"),
+        },
+        {
+          path: "/admin/editMarkdowm",
+          name: "markdowm编辑",
+          props: true,
+          component: () => import("../components/mdEditor.vue"),
         },
       ],
     },

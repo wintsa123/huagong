@@ -1,4 +1,7 @@
 <template>
+        <div class="w-1/2 m-auto">
+                <t-divider class="text-xl font-bold subpixel-antialiased">合作伙伴</t-divider>
+            </div>
     <t-collapse :default-value="[0]">
         <t-collapse-panel key="1" header="友链自定义" :disabled="disable0">
             <template #headerRightContent>

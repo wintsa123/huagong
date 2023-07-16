@@ -51,9 +51,10 @@ const onSubmit = async ({ validateResult, firstError }) => {
   if (validateResult === true) {
      sessionStorage.setItem('Bearer', a.data);
     if (a.code==200) {
+
+       await router.replace('/admin');
       MessagePlugin.success(a.message);
 
-      router.push('/admin');
     }else{
       MessagePlugin.warning(a.message);
 

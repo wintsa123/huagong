@@ -41,6 +41,7 @@ const autoUpload = ref(true);
 const files = ref([]);
 const prefix = props.prefix
 watch(() => props.uploadImg, (newData) => {
+  console.log(newData)
   if (newData) {
     files.value = [{
       name: newData.match(/\/(\w+\.\w+)$/)[1], url: newData, status: 'success',

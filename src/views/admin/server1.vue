@@ -1,4 +1,7 @@
 <template>
+          <div class="w-1/2 m-auto">
+                <t-divider class="text-xl font-bold subpixel-antialiased">工厂环境</t-divider>
+            </div>
   <div v-if=" typeof data =='object'">
     <edit :data="data.data.rows[0]" />
   </div>    </template>

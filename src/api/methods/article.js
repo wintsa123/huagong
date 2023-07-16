@@ -34,6 +34,8 @@ export const DeleteArticle = (id) =>
 export const ArticleType = (params) =>
   alovaInstance.Get("/article/type", {
     params,
+    name: 'ArticleList',
+
     
   });
 
@@ -60,4 +62,5 @@ export const taglist = (params) =>
       });
       return rawData.data;
     },
+
   });
