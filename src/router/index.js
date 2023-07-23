@@ -46,6 +46,7 @@ const router = createRouter({
       path: "/admin",
       redirect: "/admin/dash",
       name: "admin",
+
       component: () => import("../layout/admin.vue"),
       beforeEnter: (to, from) => {
         const sessionToken = sessionStorage.getItem("Bearer");
@@ -67,53 +68,82 @@ const router = createRouter({
         {
           path: "/admin/dash",
           name: "dash",
+          meta: { breadcrumb: '仪表盘' },
+
           component: () => import("../views/admin/dashboard.vue"),
         },
         {
           path: "/admin/product",
           name: "后台产品中心",
+          meta: { breadcrumb: '产品中心' },
+
           component: () => import("../views/admin/product.vue"),
         },
         {
           path: "/admin/mail",
           name: "mail消息区",
+          meta: { breadcrumb: '消息区' },
+
           component: () => import("../views/admin/mail.vue"),
+        },
+        {
+          path: "/admin/edit",
+          name: "编辑区",
+          meta: { breadcrumb: '门户编辑' },
+          children:[
+            {
+              path: "/admin/edit/fri",
+              name: "fri合作伙伴",
+              meta: { breadcrumb: '合作伙伴' },
+    
+              component: () => import("../views/admin/fri.vue"),
+            },
+            {
+              path: "/admin/edit/server",
+              name: "server工厂环境",
+              meta: { breadcrumb: '工厂环境' },
+    
+              component: () => import("../views/admin/server1.vue"),
+            },
+            {
+              path: "/admin/edit/about",
+              name: "about关于我们",
+              meta: { breadcrumb: '关于我们' },
+    
+              component: () => import("../views/admin/about.vue"),
+            },
+      
+            {
+              path: "/admin/edit/callme",
+              name: "callme联系我们",
+              meta: { breadcrumb: '联系我们' },
+    
+              component: () => import("../views/admin/callme.vue"),
+            },
+            {
+              path: "/admin/edit/changehome",
+              name: "photo更改图片",
+              meta: { breadcrumb: '首页' },
+    
+              component: () => import("../views/admin/photo.vue"),
+            },
+
+
+          ]
         },
         {
           path: "/admin/user",
           name: "user用户管理",
+          meta: { breadcrumb: '用户管理' },
+
           component: () => import("../views/admin/UserView.vue"),
         },
-        {
-          path: "/admin/edit/fri",
-          name: "fri合作伙伴",
-          component: () => import("../views/admin/fri.vue"),
-        },
-        {
-          path: "/admin/edit/server",
-          name: "server工厂环境",
-          component: () => import("../views/admin/server1.vue"),
-        },
-        {
-          path: "/admin/edit/about",
-          name: "about关于我们",
-          component: () => import("../views/admin/about.vue"),
-        },
   
-        {
-          path: "/admin/edit/callme",
-          name: "callme联系我们",
-          component: () => import("../views/admin/callme.vue"),
-        },
-        {
-          path: "/admin/edit/changehome",
-          name: "photo更改图片",
-          component: () => import("../views/admin/photo.vue"),
-        },
         {
           path: "/admin/editMarkdowm",
           name: "markdowm编辑",
           props: true,
+
           component: () => import("../components/mdEditor.vue"),
         },
       ],
