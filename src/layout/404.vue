@@ -7,6 +7,7 @@
            请联系管理员哦
         </p>
         <button class="go-home btn" @click="goHome">回家</button>
+        <button class="back btn" @click="()=>{this.$router.go(-1)}">返回上一页</button>
     </div>
     <div class="astronaut">
       <!-- <t-image
@@ -19,7 +20,7 @@
   </template>
   
   <script>
-        import astronautImg from '../assets/astronaut.png';
+        import astronautImg from '/assets/astronaut.png';
 
   export default {
     data(){
@@ -39,7 +40,7 @@
   <style scoped>
 @font-face {
   font-family: dogica;
-  src: url(./asset/font/dogica.ttf);
+  src: url(/assets/font/dogica.ttf);
 }
 * {
   padding: 0;
@@ -47,7 +48,7 @@
 }
 
 body {
-  background: url(./asset/bg.png);
+  background: url(/assets/bg.png);
   background-attachment: fixed;
   background-size: cover;
 }
@@ -84,6 +85,8 @@ body {
   height: 50px;
   border-radius: 30px;
   margin-top: 10px;
+  margin-right: 10px;
+
   cursor: pointer;
   transition: 0.3s;
   background-color: #fff;

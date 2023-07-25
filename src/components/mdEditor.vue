@@ -1,4 +1,6 @@
 <template>
+        <t-button theme="primary" v-if="typeof props.data == 'undefined'" shape="round" variant="base" :onclick='()=>{router.go(-1)}'>返回</t-button>
+
   <t-form
     ref="form"
     :rules="FORM_RULES"
@@ -239,13 +241,13 @@ const onSubmit = async ({ validateResult, firstError }) => {
       if (result.code == 200) {
         MessagePlugin.success(result.message);
         // updateState(
-        //  'ArticleList',
+        //   ArticleType({ typename: '产品中心' }),
         //   (e) => {
         //     console.log(e)
         //     return e;
         //   }
         // );
-                invalidateCache(ArticleType({ typename: '产品中心' }))
+          invalidateCache(ArticleType({ typename: '产品中心' }))
 
         router.go(-1);
       } else {

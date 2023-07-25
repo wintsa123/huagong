@@ -37,7 +37,7 @@
 
     <t-layout>
       <t-header class="flex justify-between	items-center	h-12">
-        <t-breadcrumb :max-item-width="150" :style="{ backgroundColor: 'white', border: '0px solid ' }">
+        <t-breadcrumb  :style="{ backgroundColor: 'white', border: '0px solid ' }">
           <t-breadcrumbItem class="h-[30px]" v-for="breadcrumb, index in breadcrumbs" :key="breadcrumb.to"
             :router="router" :to="{ path: breadcrumb.to }">
             {{ breadcrumb.text }}</t-breadcrumbItem>
@@ -52,7 +52,7 @@
       <t-content :style="{ backgroundColor: '#f0f2f5' }">
         <!-- <div v-html="bili"></div> -->
 
-        <div><router-view></router-view></div>
+        <router-view></router-view>
       </t-content>
     </t-layout>
 
@@ -64,13 +64,14 @@ import { createAvatar } from '@dicebear/core';
 import { adventurerNeutral } from '@dicebear/collection';
 import UserVue from '../components/User.vue';
 const User = UserVue
-const bili= '<iframe src="https://www.bilibili.com/" > </iframe>'
 
 const router = useRouter()
 const route = useRoute()
 import { ref, computed } from 'vue';
 const collapsed2 = ref(false);
-const menuValue = ref(sessionStorage.getItem('adminNav'));
+console.log(route)
+const menuValue = ref(route.matched.at(-1).meta?.icon || route.name);
+console.log(menuValue)
 const avatar = createAvatar(adventurerNeutral, {
   seed: 'Felix',
   flip: false,
@@ -92,7 +93,6 @@ const breadcrumbs = computed(() => {
 
   // 创建一个空数组来存储面包屑的信息
   const breadcrumbs = [];
-  console.log(currentRoute)
 
   // 遍历所有匹配的路由记录，获取对应的面包屑文字和路由路径
   for (const route of matchedRoutes) {
@@ -104,25 +104,21 @@ const breadcrumbs = computed(() => {
       });
     }
   }
-  console.log(breadcrumbs)
   // 返回面包屑数组
   return breadcrumbs;
 },)
 
 
-// 判断路由是否为重定向
-function isRedirect(route) {
-  return route.path && route.path !== "*" && route.path !== "/404" && route.redirect;
-}
+
 
 // 生成菜单配置
 function generateMenuFromRoutes(routes) {
   const menu = [];
   routes.forEach((route) => {
-    if (!isRedirect(route) &&route.path.startsWith('/admin') &&route.meta) {
+    if (route.path.startsWith('/admin') &&route.meta) {
       const menuItem = {
         label: route.meta?.breadcrumb || route.name,
-        key: route.meta?.icon || "",
+        key: route.meta?.icon || route.name,
         to:   route.path,
         icon: route.meta?.icon || "", // 如果路由meta中有图标，可以通过 route.meta.icon 获取
       };

@@ -1,6 +1,5 @@
 <template>
-  <t-row>
-    <t-col>
+
       <t-collapse :default-value="[0]" @change="handlePanelChange">
         <t-collapse-panel key="1" header="首页轮播图列表">
           <div class="flex flex-wrap" v-if="listData&&listData.length>0"><t-card bordered class="basis-1/5 m-8" v-for="(item, index) in listData"
@@ -45,8 +44,7 @@
         </t-collapse-panel>
 
       </t-collapse>
-    </t-col>
-  </t-row>
+
 </template>
   
 <script setup>

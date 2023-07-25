@@ -1,14 +1,11 @@
 <template>
     <keep-alive>
-
-        <div>
+        <div class="w-[97%]">
             <div class="w-1/2 m-auto">
                 <t-divider class="text-xl font-bold subpixel-antialiased">产品中心</t-divider>
             </div>
             <!-- <t-space direction="vertical" class="w-full mt-2"> -->
             <!-- 按钮操作区域 -->
-
-            
             <!-- 当数据为空需要占位时，会显示 cellEmptyContent -->
             <div v-if="typeof data == 'object'">
                 <t-table row-key="id" :data="data.data.rows" :columns="columns" :stripe="stripe" :bordered="bordered"
@@ -83,7 +80,6 @@ const request = (filters) => {
         const rows = data.value.data.rows.filter((item) => {
             let result = true;
             if (isNumber(filters.status)) {
-                console.log(filters)
 
                 result = item.status === filters.status;
             }
@@ -97,7 +93,6 @@ const request = (filters) => {
     }, 100);
 };
 const onFilterChange = (filters) => {
-    console.log(filters)
     filterValue.value = {
         ...filters,
     };
@@ -281,7 +276,7 @@ const columns = computed(() => [
 ]);
 
 const handleRowClick = (e) => {
-    console.log(e);
+    // console.log(e);
 };
 const selectedRowKeys = ref([]);
 const selectedRowDatas = ref([]);

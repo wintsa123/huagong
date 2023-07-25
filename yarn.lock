@@ -13,9 +13,9 @@
   integrity sha512-boE8Sd7KCLP3O0CSgJK0BHqAynLUTTKTHWD74laGQo6E0OA6LS6AuiR09Qvgbm+EV3vXwqWoAxzHh47B+FyR3g==
 
 "@alova/scene-vue@^1.1.4":
-  version "1.1.4"
-  resolved "https://registry.npmmirror.com/@alova/scene-vue/-/scene-vue-1.1.4.tgz#1e26c890ce82cbfda6de46d4d0bdeb002dc7bd9a"
-  integrity sha512-sSS9DrTF/+7gN7fVyWN9C/aXrw3IreSWocFiaLkz+9W4WMHUtyrtusxFqXcWXPDhy7xafRXrMgNeD0uAfpue1A==
+  version "1.1.5"
+  resolved "https://registry.npmmirror.com/@alova/scene-vue/-/scene-vue-1.1.5.tgz#e9f23123b53804ebf6387ac0ed66b94c66a321de"
+  integrity sha512-Pw7s/gbP/G74k4yBJewgw7CzgzG8WhulXFaQVLHkWxNE50dh4402ynBCrrcXnPVwCWSFQEva090wJ+OVEEnsmg==
 
 "@ampproject/remapping@^2.2.0":
   version "2.2.1"
@@ -1592,9 +1592,9 @@ aggregate-error@^3.0.0:
     indent-string "^4.0.0"
 
 alova@^2.9.1:
-  version "2.9.1"
-  resolved "https://registry.npmmirror.com/alova/-/alova-2.9.1.tgz#3b4a80037074ba1971b6bc2dfc3a607c69222231"
-  integrity sha512-u2efRvkO6o+UI6vHYVHmrkaINOAG3pFgyrwq5VSF39PAolvUkkbnnBNac0cffX7her2QjGpa7WnKBgdsasDH7Q==
+  version "2.9.3"
+  resolved "https://registry.npmmirror.com/alova/-/alova-2.9.3.tgz#00fcda819f048874477a1f098ddaa090279b869a"
+  integrity sha512-q2y9sScsp4qakiMaprhvyvnFCIPNFhjmaQzniZsHYtaOlbeigWIih+PicQFTaEt0cwu+tsifoA0uxZOgsX84ww==
 
 ansi-regex@^5.0.1:
   version "5.0.1"
@@ -1852,7 +1852,7 @@ check-error@^1.0.2:
   resolved "https://registry.npmmirror.com/check-error/-/check-error-1.0.2.tgz#574d312edd88bb5dd8912e9286dd6c0aed4aac82"
   integrity sha512-BrgHpW9NURQgzoNyjfq0Wu6VFO6D7IZEmJNdtgNqpzGG8RuNFHt2jQxWlAs4HMe119chBnv+34syEZtc6IhLtA==
 
-chokidar@^3.5.3:
+"chokidar@>=3.0.0 <4.0.0", chokidar@^3.5.3:
   version "3.5.3"
   resolved "https://registry.npmmirror.com/chokidar/-/chokidar-3.5.3.tgz#1cf37c8707b932bd1af1ae22c0432e2acd1903bd"
   integrity sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==
@@ -2554,6 +2554,11 @@ image-size@~0.5.0:
   version "0.5.5"
   resolved "https://registry.npmmirror.com/image-size/-/image-size-0.5.5.tgz#09dfd4ab9d20e29eb1c3e80b8990378df9e3cb9c"
   integrity sha512-6TDAlDPZxUFCv+fuOkIoXT/V/f3Qbq8e37p+YOiYrUv3v9cc3/6x78VdfPgFVaB9dZYeLUfKgHRebpkm/oP2VQ==
+
+immutable@^4.0.0:
+  version "4.3.1"
+  resolved "https://registry.npmmirror.com/immutable/-/immutable-4.3.1.tgz#17988b356097ab0719e2f741d56f3ec6c317f9dc"
+  integrity sha512-lj9cnmB/kVS0QHsJnYKD1uo3o39nrbKxszjnqS9Fr6NB7bZzW45U6WSGBPKXDL/CvDKqDNPA4r3DoDQ8GTxo2A==
 
 imurmurhash@^0.1.4:
   version "0.1.4"
@@ -3925,6 +3930,15 @@ safe-buffer@~5.2.0:
   resolved "https://registry.npmmirror.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
+sass@^1.64.1:
+  version "1.64.1"
+  resolved "https://registry.npmmirror.com/sass/-/sass-1.64.1.tgz#6a46f6d68e0fa5ad90aa59ce025673ddaa8441cf"
+  integrity sha512-16rRACSOFEE8VN7SCgBu1MpYCyN7urj9At898tyzdXFhC+a+yOX5dXwAR7L8/IdPJ1NB8OYoXmD55DM30B2kEQ==
+  dependencies:
+    chokidar ">=3.0.0 <4.0.0"
+    immutable "^4.0.0"
+    source-map-js ">=0.6.2 <2.0.0"
+
 sax@^1.2.4:
   version "1.2.4"
   resolved "https://registry.npmmirror.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
@@ -4022,7 +4036,7 @@ sortablejs@^1.15.0:
   resolved "https://registry.npmmirror.com/sortablejs/-/sortablejs-1.15.0.tgz#53230b8aa3502bb77a29e2005808ffdb4a5f7e2a"
   integrity sha512-bv9qgVMjUMf89wAvM6AxVvS/4MX3sPeN0+agqShejLU5z5GX4C75ow1O2e5k4L6XItUyAK3gH6AxSbXrOM5e8w==
 
-source-map-js@^1.0.2:
+"source-map-js@>=0.6.2 <2.0.0", source-map-js@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmmirror.com/source-map-js/-/source-map-js-1.0.2.tgz#adbc361d9c62df380125e7f161f71c826f1e490c"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==
@@ -4212,17 +4226,17 @@ tar@^6.1.11, tar@^6.1.13, tar@^6.1.15, tar@^6.1.2:
     mkdirp "^1.0.3"
     yallist "^4.0.0"
 
-tdesign-icons-vue-next@^0.1.7:
-  version "0.1.11"
-  resolved "https://registry.npmmirror.com/tdesign-icons-vue-next/-/tdesign-icons-vue-next-0.1.11.tgz#852d1c7b1ba37a94d0f209908f6d37b211651f71"
-  integrity sha512-/cLdTt1OIPcz/q/sTD3LsRbn/0x+nzhpxyVyRWe+HE3FYfhMV2pxXTV8ITYtmzUDyxN02vV0cQTCqz0frODC1w==
+tdesign-icons-vue-next@^0.1.12:
+  version "0.1.12"
+  resolved "https://registry.npmmirror.com/tdesign-icons-vue-next/-/tdesign-icons-vue-next-0.1.12.tgz#4f3fca257f104b8270a992acebebbede9c1943ed"
+  integrity sha512-i+hkCeq+qjI+Gau9TeSmdrvzopQZtZWb/AxFaLyKH4mmnItiiU9lpjIg9wYcLYhFONeuGhHgG0n4YhVxgW8eHA==
   dependencies:
     "@babel/runtime" "^7.16.3"
 
 tdesign-vue-next@^1.3.10:
-  version "1.3.10"
-  resolved "https://registry.npmmirror.com/tdesign-vue-next/-/tdesign-vue-next-1.3.10.tgz#c399c23d8ed8c80683ad4dd6d2549e3c71e3c5e0"
-  integrity sha512-ab5aO56gFmzgyIwUkeR9XG2q1YEnRxI4yWzYPl12y81gfS32Nb2fUnHjHjnkBA6d0o/5tMhUfCBQoJIE+5GRjg==
+  version "1.3.12"
+  resolved "https://registry.npmmirror.com/tdesign-vue-next/-/tdesign-vue-next-1.3.12.tgz#65e0504038ab8e4a4dbf22313b7e67b7aa8abc28"
+  integrity sha512-lw8rGZEW5rJujp6Fa4OIMwHQJXhOV5ZtIhoHRU3qTpJfBK2LE5IL6yuSfQNp4Jkbl8qf0IKJBFzikZJHwg7n/A==
   dependencies:
     "@babel/runtime" "^7.14.8"
     "@popperjs/core" "^2.9.3"
@@ -4234,7 +4248,7 @@ tdesign-vue-next@^1.3.10:
     lodash "^4.17.15"
     mitt "^3.0.0"
     sortablejs "^1.15.0"
-    tdesign-icons-vue-next "^0.1.7"
+    tdesign-icons-vue-next "^0.1.12"
     tinycolor2 "^1.4.2"
     validator "^13.5.1"
 

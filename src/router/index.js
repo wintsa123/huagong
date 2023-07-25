@@ -67,82 +67,102 @@ const router = createRouter({
         {
           path: "/admin/dash",
           name: "dash",
-          meta: { breadcrumb: '仪表盘',icon: 'dashboard'},
+          meta: { breadcrumb: "仪表盘", icon: "dashboard" },
           component: () => import("../views/admin/dashboard.vue"),
         },
         {
           path: "/admin/product",
           name: "后台产品中心",
-          meta: { breadcrumb: '产品中心',  icon: 'server'
-        },
+          meta: { breadcrumb: "产品中心", icon: "server" },
           component: () => import("../views/admin/product.vue"),
         },
         {
           path: "/admin/mail",
           name: "mail消息区",
-          meta: { breadcrumb: '消息区',  icon: 'mail'},
+          meta: { breadcrumb: "消息区", icon: "mail" },
           component: () => import("../views/admin/mail.vue"),
         },
         {
           path: "/admin/edit",
           name: "编辑区",
-         
-          meta: { breadcrumb: '门户编辑' , icon: 'edit-1'},
-          children:[
+          meta: { breadcrumb: "门户编辑", icon: "edit-1" },
+          redirect: "/admin/edit/changehome",
+          children: [
             {
               path: "/admin/edit/changehome",
               name: "photo更改图片",
-              meta: { breadcrumb: '首页' },
-    
+              meta: { breadcrumb: "首页" },
               component: () => import("../views/admin/photo.vue"),
             },
-           
             {
               path: "/admin/edit/server",
               name: "server工厂环境",
-              meta: { breadcrumb: '工厂环境' },
-    
+              meta: { breadcrumb: "工厂环境" },
               component: () => import("../views/admin/server1.vue"),
             },
             {
               path: "/admin/edit/about",
               name: "about关于我们",
-              meta: { breadcrumb: '关于我们' },
-    
+              meta: { breadcrumb: "关于我们" },
               component: () => import("../views/admin/about.vue"),
             },
             {
               path: "/admin/edit/fri",
               name: "fri合作伙伴",
-              meta: { breadcrumb: '合作伙伴' },
+              meta: { breadcrumb: "合作伙伴" },
               component: () => import("../views/admin/fri.vue"),
             },
-      
             {
               path: "/admin/edit/callme",
               name: "callme联系我们",
-              meta: { breadcrumb: '联系我们' },
-    
+              meta: { breadcrumb: "联系我们" },
               component: () => import("../views/admin/callme.vue"),
             },
-           
+          ],
+        },
+        {
+          path: "/admin/otherNet",
+          name: "第三方网页",
+          meta: { breadcrumb: "第三方网页", icon: "internet" },
+          redirect: "/admin/otherNet/Markdowm",
 
+          children: [
+            {
+              path: "/admin/otherNet/Markdowm",
+              name: "Markdowm使用教程",
+              meta: {
+                breadcrumb: "编辑器使用教程",
+                frameSrc: "https://imzbf.github.io/md-editor-rt/zh-CN/grammar",
+              },
+              component: () => import("../views/admin/iframe/Markdowm.vue"),
+            },
+          ],
+        },
 
-          ]
+        {
+          path: "/admin/result",
+          name: "结果页",
+          redirect: "/admin/result/notFound",
+          meta: { breadcrumb: "结果页", icon: "check-circle" },
+          children: [
+            {
+              path: "/admin/result/notFound",
+              name: "notFound",
+              component: () => import("@/layout/404.vue"),
+              meta: { breadcrumb: "404未发现" },
+            },
+          ],
         },
         {
           path: "/admin/user",
           name: "user用户管理",
-          meta: { breadcrumb: '用户管理',icon:'user-circle' },
-
+          meta: { breadcrumb: "用户管理", icon: "user-circle" },
           component: () => import("../views/admin/UserView.vue"),
         },
-  
         {
           path: "/admin/editMarkdowm",
           name: "markdowm编辑",
           props: true,
-
           component: () => import("../components/mdEditor.vue"),
         },
       ],
@@ -153,14 +173,14 @@ const router = createRouter({
       component: () => import("../views/Login.vue"),
     },
     {
-      path: '/404',
-      name: 'NotFound',
-      component: () => import("../layout/404.vue") // 404 页面的组件
+      path: "/404",
+      name: "NotFound",
+      component: () => import("../layout/404.vue"), // 404 页面的组件
     },
     {
-      path: '/:catchAll(.*)',
-      redirect: '/404' // 将所有未匹配的路径重定向到 404 页面
-    }
+      path: "/:catchAll(.*)",
+      redirect: "/404", // 将所有未匹配的路径重定向到 404 页面
+    },
   ],
 });
 
