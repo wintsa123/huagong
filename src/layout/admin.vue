@@ -50,6 +50,8 @@
         </t-popup>
       </t-header>
       <t-content :style="{ backgroundColor: '#f0f2f5' }">
+        <!-- <div v-html="bili"></div> -->
+
         <div><router-view></router-view></div>
       </t-content>
     </t-layout>
@@ -62,10 +64,10 @@ import { createAvatar } from '@dicebear/core';
 import { adventurerNeutral } from '@dicebear/collection';
 import UserVue from '../components/User.vue';
 const User = UserVue
+const bili= '<iframe src="https://www.bilibili.com/" > </iframe>'
 
 const router = useRouter()
 const route = useRoute()
-
 import { ref, computed } from 'vue';
 const collapsed2 = ref(false);
 const menuValue = ref(sessionStorage.getItem('adminNav'));
@@ -108,63 +110,45 @@ const breadcrumbs = computed(() => {
 },)
 
 
-const menu = [
-  { label: '仪表盘', key: 'dashboard', icon: 'dashboard', to: '/admin/dash' },
-  { label: '产品中心', key: 'server', icon: 'server', to: '/admin/product' },
-  { label: '消息区', key: 'mail', icon: 'mail', to: '/admin/mail' },
-  { label: '用户管理', key: 'user-circle', icon: 'user-circle', to: '/admin/user' },
-  {
-    label: '门户编辑',
-    key: 'mhEdit',
-    icon: 'edit-1',
-    to: '/admin/edit',
-    children: [
-      { label: '首页', key: 'home', to: '/admin/edit/changehome' },
-      { label: '关于我们', key: 'about', to: '/admin/edit/about' },
-      { label: '工厂环境', key: 'server1', to: '/admin/edit/server' },
-      { label: '合作伙伴', key: 'fri', to: '/admin/edit/fri' },
-      { label: '联系我们', key: 'callme', to: '/admin/edit/callme' },
-    ],
-  },
-  // 可以添加更多的菜单项和子菜单项
-]
-const change = (e) => {
-  console.log(e)
+// 判断路由是否为重定向
+function isRedirect(route) {
+  return route.path && route.path !== "*" && route.path !== "/404" && route.redirect;
 }
-// function navigateTo(key) {
-//   sessionStorage.setItem('adminNav', key)
-//   // 执行路由跳转
-//   switch (key) {
-//     case 'dashboard':
-//       router.push('/admin/dash');
-//       break;
-//     case 'server':
-//       router.push('/admin/product');
-//       break;
-//     case 'mail':
-//       router.push('/admin/mail');
-//       break;
-//     case 'user-circle':
-//       router.push('/admin/user');
-//       break;
-//     case 'home':
-//       router.push('/admin/edit/changehome');
-//       break;
-//     case 'about':
-//       router.push('/admin/edit/about');
-//       break;
-//     case 'server1':
-//       router.push('/admin/edit/server');
-//       break;
-//     case 'fri':
-//       router.push('/admin/edit/fri');
-//       break;
-//     case 'callme':
-//       router.push('/admin/edit/callme');
-//       break;
-//     // 其他菜单项的路由跳转
-//     default:
-//       break;
-//   }
-// }
+
+// 生成菜单配置
+function generateMenuFromRoutes(routes) {
+  const menu = [];
+  routes.forEach((route) => {
+    if (!isRedirect(route) &&route.path.startsWith('/admin') &&route.meta) {
+      const menuItem = {
+        label: route.meta?.breadcrumb || route.name,
+        key: route.meta?.icon || "",
+        to:   route.path,
+        icon: route.meta?.icon || "", // 如果路由meta中有图标，可以通过 route.meta.icon 获取
+      };
+      if (!route.meta?.icon) {
+        delete menuItem.icon
+      }
+      if (route.children && route.children.length > 0) {
+        menuItem.children = generateMenuFromRoutes(route.children);
+      }
+      menu.push(menuItem);
+    } else {
+      // 处理重定向的子级情况
+      if (route.children && route.children.length > 0) {
+        const redirectChildren = generateMenuFromRoutes(route.children);
+        menu.push(...redirectChildren);
+      }
+    }
+  });
+
+  return menu;
+}
+
+
+
+
+const menu = generateMenuFromRoutes(router.options.routes)
+
+
 </script>

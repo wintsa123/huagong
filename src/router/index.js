@@ -46,7 +46,6 @@ const router = createRouter({
       path: "/admin",
       redirect: "/admin/dash",
       name: "admin",
-
       component: () => import("../layout/admin.vue"),
       beforeEnter: (to, from) => {
         const sessionToken = sessionStorage.getItem("Bearer");
@@ -68,36 +67,36 @@ const router = createRouter({
         {
           path: "/admin/dash",
           name: "dash",
-          meta: { breadcrumb: '仪表盘' },
-
+          meta: { breadcrumb: '仪表盘',icon: 'dashboard'},
           component: () => import("../views/admin/dashboard.vue"),
         },
         {
           path: "/admin/product",
           name: "后台产品中心",
-          meta: { breadcrumb: '产品中心' },
-
+          meta: { breadcrumb: '产品中心',  icon: 'server'
+        },
           component: () => import("../views/admin/product.vue"),
         },
         {
           path: "/admin/mail",
           name: "mail消息区",
-          meta: { breadcrumb: '消息区' },
-
+          meta: { breadcrumb: '消息区',  icon: 'mail'},
           component: () => import("../views/admin/mail.vue"),
         },
         {
           path: "/admin/edit",
           name: "编辑区",
-          meta: { breadcrumb: '门户编辑' },
+         
+          meta: { breadcrumb: '门户编辑' , icon: 'edit-1'},
           children:[
             {
-              path: "/admin/edit/fri",
-              name: "fri合作伙伴",
-              meta: { breadcrumb: '合作伙伴' },
+              path: "/admin/edit/changehome",
+              name: "photo更改图片",
+              meta: { breadcrumb: '首页' },
     
-              component: () => import("../views/admin/fri.vue"),
+              component: () => import("../views/admin/photo.vue"),
             },
+           
             {
               path: "/admin/edit/server",
               name: "server工厂环境",
@@ -112,6 +111,12 @@ const router = createRouter({
     
               component: () => import("../views/admin/about.vue"),
             },
+            {
+              path: "/admin/edit/fri",
+              name: "fri合作伙伴",
+              meta: { breadcrumb: '合作伙伴' },
+              component: () => import("../views/admin/fri.vue"),
+            },
       
             {
               path: "/admin/edit/callme",
@@ -120,13 +125,7 @@ const router = createRouter({
     
               component: () => import("../views/admin/callme.vue"),
             },
-            {
-              path: "/admin/edit/changehome",
-              name: "photo更改图片",
-              meta: { breadcrumb: '首页' },
-    
-              component: () => import("../views/admin/photo.vue"),
-            },
+           
 
 
           ]
@@ -134,7 +133,7 @@ const router = createRouter({
         {
           path: "/admin/user",
           name: "user用户管理",
-          meta: { breadcrumb: '用户管理' },
+          meta: { breadcrumb: '用户管理',icon:'user-circle' },
 
           component: () => import("../views/admin/UserView.vue"),
         },

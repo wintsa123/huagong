@@ -3,7 +3,7 @@ import GlobalFetch from "alova/GlobalFetch";
 import VueHook from "alova/vue";
 import { MessagePlugin } from 'tdesign-vue-next';
 import { axiosRequestAdapter } from '@alova/adapter-axios';
-
+import router from '../router'
 export const alovaInstance = createAlova({
   baseURL: "http://127.0.0.1:3300",
   statesHook: VueHook,
@@ -34,7 +34,8 @@ export const alovaInstance = createAlova({
         if (json.message.includes('登录信息过期')||json.message.includes('未登录')) {
           MessagePlugin.question(json.message)
           sessionStorage.removeItem("Bearer")
-          window.location.href = '/login'
+          router.replace('/login')
+
          }
 
         throw new Error(response.statusText);
