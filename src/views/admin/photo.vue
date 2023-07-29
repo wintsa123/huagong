@@ -23,11 +23,11 @@
               </template>
               <template #footer>
                 <t-row :align="'middle'" justify="center" style="gap: 24px">
-                  <!-- <t-col flex="auto" style="display: inline-flex; justify-content: center">
-                    <t-button variant="text" shape="square"  :onClick="downloadImage((QINIU_CDN_URL + item.qiniu_key),item.qiniu_key)">
+                  <t-col flex="auto" style="display: inline-flex; justify-content: center">
+                    <t-button variant="text" shape="square"  @click="downloadImage(QINIU_CDN_URL + item.qiniu_key,item.qiniu_key)">
                       <download-icon />
                     </t-button>
-                  </t-col> -->
+                  </t-col>
                   <t-col flex="auto" style="display: inline-flex; justify-content: center">
                     <t-button variant="text" shape="square" @click="deletePhoto(item.id)">
                       <delete-icon />
@@ -48,8 +48,10 @@
 </template>
   
 <script setup>
-import {  DeleteIcon, BrowseIcon } from 'tdesign-icons-vue-next';
+import {  DeleteIcon, BrowseIcon ,DownloadIcon} from 'tdesign-icons-vue-next';
 import { ref, reactive } from "vue";
+import { downloadByOnlineUrl } from "@pureadmin/utils"
+
 import { useRequest, useWatcher, updateState } from "alova";
 import { getlistByprefix, fetchDeleteQiniuData, getToken } from '../../api/methods/qiniuyun.js'
 import { QINIU_CDN_URL } from "@/config.js";
@@ -86,6 +88,11 @@ const deletePhoto = async (id) => {
       return oldListData;
     });
   }
+}
+const downloadImage =  (url,name) => {
+  console.log(name)
+  downloadByOnlineUrl(url, name)
+
 }
 
 </script>

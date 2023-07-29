@@ -1,17 +1,15 @@
 <template>
-    <keep-alive>
-        <div class="w-[97%]">
-            <div class="w-1/2 m-auto">
-                <t-divider class="text-xl font-bold subpixel-antialiased">产品中心</t-divider>
-            </div>
-            <!-- <t-space direction="vertical" class="w-full mt-2"> -->
-            <!-- 按钮操作区域 -->
-            <!-- 当数据为空需要占位时，会显示 cellEmptyContent -->
-            <div v-if="typeof data == 'object'">
-                <t-table row-key="id" :data="data.data.rows" :columns="columns" :stripe="stripe" :bordered="bordered"
-                    :table-layout="tableLayout ? 'auto' : 'fixed'" size="medium" :selected-row-keys="selectedRowKeys"
+    
+    <div class=" bg-white rounded-lg">
+        <div class="w-1/2 m-auto ">
+            <t-divider class="text-xl font-bold subpixel-antialiased leading-[4em]">产品中心</t-divider>
+        </div>
+        <div v-if="typeof data == 'object'" class="	rounded-lg">
+                <t-table class=" bg-white" row-key="id" :data="datas" :columns="columns" :stripe="stripe"
+                    :bordered="bordered" :table-layout="tableLayout ? 'auto' : 'fixed'" size="medium"
+                    :selected-row-keys="selectedRowKeys" :sort="sort" multiple-sort @sort-change="sortChange"
                     @select-change="rehandleSelectChange" :pagination="pagination" cell-empty-content="-" resizable
-                    @row-click="handleRowClick" drag-sort="col" @drag-sort="onDragSort" v-model:filterValue="filterValue"
+                    drag-sort="col" @drag-sort="onDragSort" v-model:filterValue="filterValue"
                     @filter-change="onFilterChange">
                     <template #topContent>
 
@@ -44,35 +42,36 @@
                     </template>
                     <template #operation="{ row }">
                         <t-space direction="vertical">
-
                             <t-button variant="outline" :theme="row.status == 1 ? 'danger' : 'success'" ghost
                                 :loading="row.loading" @click="update(row)">
                                 {{ row.status === 1 ? '下架' : '上架' }}
                             </t-button>
-
-                            <t-button variant="outline" theme="primary" ghost @click="rehandleClickOp(row)">
+                            <t-button variant="outline" theme="primary" ghost @click="ChangeArticle(row)">
                                 编辑
                             </t-button>
                         </t-space>
 
                     </template>
                 </t-table>
-            </div>
-
         </div>
-    </keep-alive>
+    </div>
 </template>
   
 <script setup lang="jsx">
-import { ref, computed } from 'vue';
+import { ref, computed, unref, isRef, watch,defineComponent } from 'vue';
 import { useRequest, updateState } from "alova";
 import { ArticleType, DeleteArticle, UpdateArticle } from "@/api/methods/article";
 import { useRouter } from 'vue-router';
-import { MessagePlugin } from "tdesign-vue-next";
+import { MessagePlugin, DateRangePickerPanel } from "tdesign-vue-next";
 import isNumber from 'lodash/isNumber';
+import _ from "lodash";
+import { storageLocal } from "@pureadmin/utils"
+// 使用组合式 API 定义组件
 
+// 设置组件名称为 ComponentA
+const name = 'product';
 const router = useRouter();
-const filterValue = ref({ channel: [], createTime: [] });
+const filterValue = ref({});
 
 const request = (filters) => {
     const timer = setTimeout(() => {
@@ -80,19 +79,23 @@ const request = (filters) => {
         const rows = data.value.data.rows.filter((item) => {
             let result = true;
             if (isNumber(filters.status)) {
-
                 result = item.status === filters.status;
             }
-            //   if (result && filters.channel && filters.channel.length) {
-            //     result = filters.channel.includes(item.channel);
-            //   }
+            if (filters.title) {
+                // 创建一个正则表达式对象，用来匹配string2
+                const regex = new RegExp(filters.title);
+                // 使用test()方法检查string1是否匹配正则表达式
+                result = regex.test(item.title);
 
+            }
             return result;
-        });
-        data.value.data.rows = rows;
+        })
+        datas.value = rows;
+        pagination.value.total = rows.length
     }, 100);
 };
 const onFilterChange = (filters) => {
+    console.log(filters)
     filterValue.value = {
         ...filters,
     };
@@ -101,6 +104,7 @@ const onFilterChange = (filters) => {
 
 import { CheckCircleFilledIcon, CloseCircleFilledIcon, DeleteIcon, AddIcon } from 'tdesign-icons-vue-next';
 const { send, onSuccess, data } = useRequest(() => ArticleType({ typename: '产品中心' }), {
+   
     initialData: {
         "code": 200,
         "data": {
@@ -118,6 +122,7 @@ const { send, onSuccess, data } = useRequest(() => ArticleType({ typename: '产�
         "message": "获取成功！"
     },
 })
+
 const { send: delId, onSuccess: delList } = useRequest((id) => DeleteArticle(id), {
     immediate: false,
 })
@@ -132,6 +137,10 @@ const createArticle = () => {
 }
 const deleteArticle = async () => {
     try {
+        if (selectedRowKeys.value.length == 0) {
+            MessagePlugin.error('请先选择一行')
+            return false
+        }
         const parallelRequest = async () => {
             let tmp = selectedRowKeys.value.map(e => {
                 return delId(e)
@@ -141,20 +150,20 @@ const deleteArticle = async () => {
             // 并行请求完成，继续处理业务...
         };
         let result = await parallelRequest()
-        // console.log(result)
         if (result.every(obj => obj.code == 200)) {
             MessagePlugin.success("删除成功");
-            // pagination.value.total--
             await updateState(ArticleType({ typename: '产品中心' }), List => {
                 let result = List.data.rows && List.data.rows.filter(e => {
                     return !selectedRowKeys.value.includes(e.id)
                 })
                 List.data.total = List.data.total - selectedRowKeys.value.length
                 List.data.rows = result
+                datas.value = [...result]
                 return List
             });
             pagination.value.total = pagination.value.total - selectedRowKeys.value.length
             selectedRowKeys.value = []
+            // invalidateCache(ArticleType({ typename: '产品中心' }))
 
 
         } else {
@@ -178,7 +187,23 @@ const showPhoto = ref(true);
 
 const columns = computed(() => [
     { colKey: 'row-select', type: 'multiple', width: 50, },
-    { colKey: 'title', title: '产品', width: '100' },
+    {
+        colKey: 'title', title: '产品', width: '100', filter: {
+            type: 'input',
+
+            // 文本域搜索
+            // component: Textarea,
+
+            resetValue: '',
+            // 按下 Enter 键时也触发确认搜索
+            confirmEvents: ['onEnter'],
+            props: {
+                placeholder: '输入关键词过滤',
+            },
+            // 是否显示重置取消按钮，一般情况不需要显示
+            showConfirmAndReset: true,
+        }
+    },
     {
         colKey: 'head_img', title: '背景图',
         cell: (h, { row }) => {
@@ -199,9 +224,14 @@ const columns = computed(() => [
             }
         },
     },
-    { colKey: 'priority', title: '权重' },
+    {
+        colKey: 'priority', title: '权重', sortType: 'all',
+        sorter: (a, b) => a.priority - b.priority,
+    },
     {
         colKey: 'tags', title: '标签',
+
+
         cell: (h, { row }) => {
             return (
                 <div class='flex flex-wrap	'>
@@ -219,31 +249,22 @@ const columns = computed(() => [
             );
         },
     },
-    { colKey: 'created_at', title: '创建时间', sorter: true, ellipsis: true },
+    {
+        colKey: 'created_at', title: '创建时间', sortType: 'all', sorter: (a, b) => new Date(a.created_at) - new Date(b.created_at), ellipsis: false,
+
+    },
     {
         colKey: 'status', title: '状态', align: 'center',
+        sortType: 'all',
+        sorter: (a, b) => a.status - b.status,
         filter: {
             type: 'single',
             list: [
                 { label: '审批通过', value: 1 },
                 { label: '下架', value: 2 },
             ],
-            // 支持透传全部 Popup 组件属性
-            // popupProps: {
-            //   attach: () => document.body,
-            // },
-        },
-        // filter: {
-        //     type: 'multiple',
-        //     resetValue: [],
-        //     list: [
-        //         { label: 'All', checkAll: true },
-        //         { label: '审批通过', value: 1 },
-        //         { label: '下架', value: 2 },
-        //     ],
-        //     showConfirmAndReset: true,
 
-        // },
+        },
         cell: (h, { row }) => {
             if (row.status == 1) {
                 return (
@@ -271,13 +292,22 @@ const columns = computed(() => [
             }
         },
     },
-    { colKey: 'click', title: '点击量' },
+    { colKey: 'click', title: '点击量', sortType: 'all',
+        sorter: (a, b) => a.click - b.click, },
     { colKey: 'operation', title: '操作', width: 120, align: 'center', foot: '-' },
 ]);
 
-const handleRowClick = (e) => {
-    // console.log(e);
+const sort = ref([
+
+]);
+
+
+const sortChange = (sortVal, options) => {
+    // sort.value 和 data.value 的赋值都是必须
+    sort.value = sortVal;
+    datas.value = options.currentDataSource;
 };
+
 const selectedRowKeys = ref([]);
 const selectedRowDatas = ref([]);
 
@@ -296,9 +326,12 @@ const pagination = ref({
     defaultPageSize: 5,
     total: data.value.data.total
 })
+const datas = ref()
 onSuccess((e) => {
     pagination.value.defaultCurrent = e.data.data.nowPage
     pagination.value.total = e.data.data.total
+
+    datas.value = [...e.data.data.rows]
 
 })
 const loading = ref(false)
@@ -330,10 +363,13 @@ const update = async (row) => {
     }
 
 }
-</script>
-<style>
-.t-table__top-content {
-    background-color: rgb(240 242 245);
+const ChangeArticle =async (row) => {
+    storageLocal().setItem('info', {
+        row
+    })
+    await router.push({ name: 'markdowm编辑' })
+
 
 }
-</style>
+
+</script>

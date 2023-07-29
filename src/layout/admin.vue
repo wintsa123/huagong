@@ -36,23 +36,32 @@
     </t-aside>
 
     <t-layout>
-      <t-header class="flex justify-between	items-center	h-12">
-        <t-breadcrumb  :style="{ backgroundColor: 'white', border: '0px solid ' }">
-          <t-breadcrumbItem class="h-[30px]" v-for="breadcrumb, index in breadcrumbs" :key="breadcrumb.to"
+      <t-header class="flex justify-between	items-center">
+        <t-breadcrumb :style="{ backgroundColor: 'white', border: '0px solid ' }">
+          <t-breadcrumbItem  v-for="breadcrumb, index in breadcrumbs" :key="breadcrumb.to"
             :router="router" :to="{ path: breadcrumb.to }">
             {{ breadcrumb.text }}</t-breadcrumbItem>
         </t-breadcrumb>
 
-        <t-popup destroyOnClose hideEmptyPopup placement="bottom"   trigger="click">
+        <t-popup destroyOnClose hideEmptyPopup placement="bottom" trigger="click">
           <div v-html="svg" class='cursor-pointer'></div><template #content>
             <User></User>
           </template>
         </t-popup>
       </t-header>
       <t-content :style="{ backgroundColor: '#f0f2f5' }">
-        <!-- <div v-html="bili"></div> -->
 
-        <router-view></router-view>
+        <router-view >
+        </router-view> 
+        <!-- <router-view v-slot="{Component}">
+
+          <KeepAlive>
+
+            <component :is="Component" />
+
+          </KeepAlive>
+        </router-view> -->
+
       </t-content>
     </t-layout>
 
@@ -69,9 +78,7 @@ const router = useRouter()
 const route = useRoute()
 import { ref, computed } from 'vue';
 const collapsed2 = ref(false);
-console.log(route)
 const menuValue = ref(route.matched.at(-1).meta?.icon || route.name);
-console.log(menuValue)
 const avatar = createAvatar(adventurerNeutral, {
   seed: 'Felix',
   flip: false,
@@ -115,11 +122,11 @@ const breadcrumbs = computed(() => {
 function generateMenuFromRoutes(routes) {
   const menu = [];
   routes.forEach((route) => {
-    if (route.path.startsWith('/admin') &&route.meta) {
+    if (route.path.startsWith('/admin') && route.meta) {
       const menuItem = {
         label: route.meta?.breadcrumb || route.name,
         key: route.meta?.icon || route.name,
-        to:   route.path,
+        to: route.path,
         icon: route.meta?.icon || "", // 如果路由meta中有图标，可以通过 route.meta.icon 获取
       };
       if (!route.meta?.icon) {
@@ -148,3 +155,8 @@ const menu = generateMenuFromRoutes(router.options.routes)
 
 
 </script>
+<style > 
+.t-breadcrumb{
+  height: var(--td-comp-size-xxxl);
+}
+</style>

@@ -1,8 +1,8 @@
 <template>
     <div class=" h-full">
-1
+        <!-- <Echart/> -->
     </div>
 </template>
 <script setup lang="jsx">
-
+// import Echart from '@/components/Echarts.vue'
 </script>

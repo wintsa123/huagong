@@ -8,12 +8,12 @@
          fileListDisplay={(h, { files }) => <div>{JSON.stringify(files)}</div>}
        -->
     <t-row><t-col>
-        <div>是否自动上传：<t-switch v-model="autoUpload"></t-switch></div>
+        <div>自动上传：<t-switch :disabled="true" v-model="autoUpload"></t-switch></div>
       </t-col></t-row>
     <t-row><t-col>
         <t-space>
           <t-upload v-model="files" :auto-upload="autoUpload" accept="image/*" theme="image" :abridge-name="[10, 8]"
-            :format-Request="formatRequest" draggable action="https://upload-z2.qiniup.com/" :headers="seesion"
+            :format-Request="formatRequest" action="https://upload-z2.qiniup.com/" :headers="seesion"
             :formatResponse="formatResponse" :on-Success="handleRequestSuccess" :on-fail="handleRequestFail"
             :on-Remove="handleRemove" />
         </t-space>
@@ -40,13 +40,22 @@ import { accessAction } from '@alova/scene-vue';
 const autoUpload = ref(true);
 const files = ref([]);
 const prefix = props.prefix
+//同步传值
+props.uploadImg ? files.value = [{
+  name: props.uploadImg.match(/\/([^\/]+)$/)[1], url: props.uploadImg, status: 'success',
+}] : ''
+//处理异步
+console.log(props.uploadImg )
+
 watch(() => props.uploadImg, (newData) => {
+
   console.log(newData)
   if (newData) {
     files.value = [{
-      name: newData.match(/\/(\w+\.\w+)$/)[1], url: newData, status: 'success',
+      name: newData.match(/\/([^\/]+)$/)[1], url: newData, status: 'success',
     }];
-
+  }else{
+    files.value = [];
   }
 });
 //根据名字删除

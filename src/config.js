@@ -8,7 +8,7 @@
 // export const GITHUB_CLIENT_ID = '8c2c07b574ae70ecfa9d';
 // export const GITHUB_OAUTH_URL = 'https://github.com/login/oauth/authorize?';
 
-export const QINIU_CDN_URL = 'http://rwnrmrlqg.hn-bkt.clouddn.com/';
+export const QINIU_CDN_URL = 'http://ryfqr3djk.hn-bkt.clouddn.com/';
 
 // export const BLOG_CLIENT_URL = 'https://www.hsslive.cn';
 // export const BLOG_ADMIN_URL = 'https://admin.hsslive.cn';

@@ -160,11 +160,12 @@ const router = createRouter({
           component: () => import("../views/admin/UserView.vue"),
         },
         {
-          path: "/admin/editMarkdowm",
+          path: "/admin/editMarkdowm/",
           name: "markdowm编辑",
           props: true,
           component: () => import("../components/mdEditor.vue"),
         },
+       
       ],
     },
     {

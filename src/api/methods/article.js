@@ -35,7 +35,14 @@ export const ArticleType = (params) =>
   alovaInstance.Get("/article/type", {
     params,
     name: 'ArticleList',
+    // transformData(rawData, headers) {
+    //   rawData.data.rows.forEach(element => {
+    //     element.tags=element.tags.length>0?element.tags.map(e=>e.id):[]
+    //     element.types=element.types.length>0?element.types.map(e=>e.id):[]
 
+    //   });
+    //   return rawData;
+    // }
     
   });
 
