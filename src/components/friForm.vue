@@ -1,6 +1,6 @@
 <template>
     <t-space direction="vertical" size="large">
-        <t-form ref="form" :data="formData" :rules="rules" reset-type="initial" colon>
+        <t-form ref="form" :data="formData" :rules="rules" colon>
             <t-form-item label="公司名" name="name">
                 <t-input v-model="formData.name"></t-input>
             </t-form-item>
@@ -26,17 +26,40 @@
     </t-space>
 </template>
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, unref, onMounted } from 'vue';
 import { MessagePlugin } from 'tdesign-vue-next';
 import imgUpload from '@/components/Imgupload.vue'
 import { useRequest, invalidateCache, updateState } from "alova";
 import { useForm } from '@alova/scene-vue';
+import { cloneDeep } from "@pureadmin/utils"
+// const props = defineProps({
+//   info:Object,
+// });
 
+const oldData = ref({
+    name: props.info?.name || '',
+    desc: props.info?.desc || '',
+    email: props.info?.email || '',
+    url: props.info?.url || '',
+    status: props.info?.status || 1,
+    avatar: props.info?.avatar || ''
+})
+// onMounted(() => {
+//   // 当子组件被渲染后，检查父组件传递的值并设置到子组件的初始值中
+//   if (props.info) {
+//     console.log(props)
+
+//     Object.assign(oldData, props.info);
+//   }
+// });
 import {
     CreateFriend,
-    UpdateFriend
+    UpdateFriend,
+    FriendList
 } from "@/api/methods/friend";
 const form = ref(null);
+const props = defineProps(['info']);
+const {send:update}=useRequest((obj)=>UpdateFriend(obj),{immediate:false})
 const {
     // 提交状态
     loading: submiting,
@@ -46,34 +69,25 @@ const {
     send: submit,
     // 提交成功回调绑定
     onSuccess,
+    reset: restFunction
 } = useForm(
     data => {
         // 可以在此转换表单数据并提交
         return CreateFriend(data)
     },
     {
-        resetAfterSubmiting: true,
+        // resetAfterSubmiting: true,
         // 初始化表单数据
-        initialForm: {
-            name: '',
-            desc: '',
-            email: '',
-            url: '',
-            status: 1,
-            avatar: ''
-        }
+        initialForm: oldData
     }
 );
+
 const emailSuffix = ['@qq.com', '@163.com', '@gmail.com'];
 const rules = {
     name: [
-        { required: true, message: '公司名必填', type: 'error', trigger: 'blur' },
-        { required: true, message: '公司名必填', type: 'error', trigger: 'change' },
         { whitespace: true, message: '公司名不能为空' },
-
     ],
 
-    email: [{ required: true, message: '格式必须为邮箱', type: 'warning' }],
 
 };
 const emailOptions = computed(() => {
@@ -87,19 +101,54 @@ const onReset = () => {
     MessagePlugin.success('重置完成');
 };
 const onSubmit = async () => {
-    form.value.submit();
-    //   submit()
     // 校验数据，代码有效，勿删
     let validateResult = await form.value.validate()
     if (validateResult && Object.keys(validateResult).length) {
         const firstError = Object.values(validateResult)[0]?.[0]?.message;
         MessagePlugin.warning(firstError);
-    } else if (validateResult) {
-        let result = await submit()
-        console.log(result)
-        form.value.reset({ type: 'initial' });
+    }
+    if (validateResult) {
+        if (!!props.info) {
+            formData.value['id']=props.info?.id
+            let result = await  update(unref(formData))
+            
+            if (result.code == 200) {
+                MessagePlugin.success(result.message);
+
+                await updateState(FriendList(), (e) => {
+                    e.data.rows.forEach((element,index) => {
+                        if (element.id==props.info.id) {
+                            e.data.rows[index]={ ...unref(formData) }
+                        }
+                    });
+                    return e
+                })
+                // invalidateCache(FriendList())
+                return Promise.resolve(result.code);
+            }
+        }else{
+            let result = await submit()
+            let backup = cloneDeep(formData.value)
+            if (result.code == 200) {
+                MessagePlugin.success(result.message);
+                await updateState(FriendList(), (e) => {
+                    backup['id'] = result.data.id
+                    e.data.rows.push(backup) 
+                    // form.value.reset({ type: 'initial' });
+                    return e
+                })
+                // invalidateCache(FriendList())
+                await form.value.reset({ type: 'initial' });
+
+                return Promise.resolve(result.code);
+
+            }
+        }
+
+
     }
 
+    return false
 };
 
 
@@ -107,4 +156,8 @@ defineExpose({
     onReset, onSubmit
 });
 </script>
-  
+<style scoped>
+:deep(.t-collapse-panel__content) {
+    padding: 0px !important;
+}
+</style>

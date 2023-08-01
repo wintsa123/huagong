@@ -83,6 +83,12 @@ const router = createRouter({
           component: () => import("../views/admin/mail.vue"),
         },
         {
+          path: "/admin/user",
+          name: "user用户管理",
+          meta: { breadcrumb: "用户管理", icon: "user-circle" },
+          component: () => import("../views/admin/UserView.vue"),
+        },
+        {
           path: "/admin/edit",
           name: "编辑区",
           meta: { breadcrumb: "门户编辑", icon: "edit-1" },
@@ -154,18 +160,33 @@ const router = createRouter({
           ],
         },
         {
-          path: "/admin/user",
-          name: "user用户管理",
-          meta: { breadcrumb: "用户管理", icon: "user-circle" },
-          component: () => import("../views/admin/UserView.vue"),
+          path: "/admin/setting",
+          name: "系统设置",
+          meta: { breadcrumb: "系统设置", icon: "setting" },
+          redirect: "/admin/setting/set",
+          children: [
+            {
+              path: "/admin/setting/set",
+              name: "前台设置",
+              meta: { breadcrumb: "前台设置" },
+              component: () => import("@/views/admin/setting/set.vue"),
+            },
+            {
+              path: "/admin/setting/info",
+              name: "系统版本",
+              meta: { breadcrumb: "系统版本" },
+              component: () => import("@/views/admin/setting/info.vue"),
+            },
+          ],
         },
+   
+        
         {
           path: "/admin/editMarkdowm/",
           name: "markdowm编辑",
           props: true,
           component: () => import("../components/mdEditor.vue"),
         },
-       
       ],
     },
     {

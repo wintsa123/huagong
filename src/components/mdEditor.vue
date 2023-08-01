@@ -4,7 +4,7 @@
     <RollbackIcon slot="icon" />返回
   </t-button>
   <t-form ref="form" :rules="FORM_RULES" :data="formData" :colon="true" @submit="onSubmit" @reset="onReset"
-    :disabled="disabled" resetType="initial" class=" mt-10 mb-10">
+    :disabled="disabled" resetType="initial" class=" mt-10 mb-10 mx-auto">
     <t-form-item label="标题" name="title" v-if="shouldDisplayTitleFormItem">
       <t-input v-model.trim="formData.title" placeholder="请输入内容"></t-input>
     </t-form-item>
@@ -187,7 +187,7 @@ const onSubmit = async ({ validateResult, firstError }) => {
     loading.value = true;
     let result;
     //创建文章
-    if (typeof props.data == "undefined" && typeof info == "undefined") {
+    if (typeof props.data == "undefined" &&  !info ) {
       result = await creatArticle({
         title: formData.title,
         content: formData.content,
@@ -293,6 +293,7 @@ const onUploadImg = async (files, callback) => {
 };
 </script>
 <style scoped>
-.edit ::v-deep   .t-form__controls{
+.edit :deep(.t-form__controls){
  margin-left: 0px !important;
-}</style>
+}
+</style>
