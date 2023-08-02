@@ -26,32 +26,13 @@
     </t-space>
 </template>
 <script setup>
-import { ref, reactive, computed, unref, onMounted } from 'vue';
+import { ref, reactive, computed, unref, onMounted, watch } from 'vue';
 import { MessagePlugin } from 'tdesign-vue-next';
 import imgUpload from '@/components/Imgupload.vue'
 import { useRequest, invalidateCache, updateState } from "alova";
 import { useForm } from '@alova/scene-vue';
 import { cloneDeep } from "@pureadmin/utils"
-// const props = defineProps({
-//   info:Object,
-// });
 
-const oldData = ref({
-    name: props.info?.name || '',
-    desc: props.info?.desc || '',
-    email: props.info?.email || '',
-    url: props.info?.url || '',
-    status: props.info?.status || 1,
-    avatar: props.info?.avatar || ''
-})
-// onMounted(() => {
-//   // 当子组件被渲染后，检查父组件传递的值并设置到子组件的初始值中
-//   if (props.info) {
-//     console.log(props)
-
-//     Object.assign(oldData, props.info);
-//   }
-// });
 import {
     CreateFriend,
     UpdateFriend,
@@ -59,10 +40,8 @@ import {
 } from "@/api/methods/friend";
 const form = ref(null);
 const props = defineProps(['info']);
-const {send:update}=useRequest((obj)=>UpdateFriend(obj),{immediate:false})
+const { send: update } = useRequest((obj) => UpdateFriend(obj), { immediate: false })
 const {
-    // 提交状态
-    loading: submiting,
     // 响应式的表单数据，内容由initialForm决定
     form: formData,
     // 提交数据函数
@@ -76,9 +55,17 @@ const {
         return CreateFriend(data)
     },
     {
+        resetAfterSubmiting: true,
         // resetAfterSubmiting: true,
         // 初始化表单数据
-        initialForm: oldData
+        initialForm: {
+            name: props.info?.name || '',
+            desc: props.info?.desc || '',
+            email: props.info?.email || '',
+            url: props.info?.url || '',
+            status: props.info?.status || 1,
+            avatar: props.info?.avatar || ''
+        }
     }
 );
 
@@ -87,19 +74,16 @@ const rules = {
     name: [
         { whitespace: true, message: '公司名不能为空' },
     ],
-
-
 };
+
+
 const emailOptions = computed(() => {
     const emailPrefix = formData.value.email.split('@')[0];
     if (!emailPrefix) return [];
 
     return emailSuffix.map((suffix) => emailPrefix + suffix);
 });
-const onReset = () => {
-    form.value.reset({ type: 'initial' });
-    MessagePlugin.success('重置完成');
-};
+
 const onSubmit = async () => {
     // 校验数据，代码有效，勿删
     let validateResult = await form.value.validate()
@@ -109,37 +93,33 @@ const onSubmit = async () => {
     }
     if (validateResult) {
         if (!!props.info) {
-            formData.value['id']=props.info?.id
-            let result = await  update(unref(formData))
-            
+            formData.value['id'] = props.info?.id
+            let result = await update(unref(formData))
+
             if (result.code == 200) {
                 MessagePlugin.success(result.message);
 
                 await updateState(FriendList(), (e) => {
-                    e.data.rows.forEach((element,index) => {
-                        if (element.id==props.info.id) {
-                            e.data.rows[index]={ ...unref(formData) }
+                    e.data.rows.forEach((element, index) => {
+                        if (element.id == props.info.id) {
+                            e.data.rows[index] = { ...unref(formData) }
                         }
                     });
                     return e
                 })
-                // invalidateCache(FriendList())
                 return Promise.resolve(result.code);
             }
-        }else{
-            let result = await submit()
+        } else {
             let backup = cloneDeep(formData.value)
+
+            let result = await submit()
             if (result.code == 200) {
                 MessagePlugin.success(result.message);
                 await updateState(FriendList(), (e) => {
                     backup['id'] = result.data.id
-                    e.data.rows.push(backup) 
-                    // form.value.reset({ type: 'initial' });
+                    e.data.rows.push(backup)
                     return e
                 })
-                // invalidateCache(FriendList())
-                await form.value.reset({ type: 'initial' });
-
                 return Promise.resolve(result.code);
 
             }
@@ -153,7 +133,7 @@ const onSubmit = async () => {
 
 
 defineExpose({
-    onReset, onSubmit
+     onSubmit,restFunction
 });
 </script>
 <style scoped>

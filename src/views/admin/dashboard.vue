@@ -1,4 +1,4 @@
-<template>
+<template>开发中
     <div class=" h-full">
         <!-- <Echart/> -->
     </div>

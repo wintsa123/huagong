@@ -31,34 +31,26 @@
                     <template #icon><add-icon /></template>
                     新建
                 </t-button>
-                <t-dialog v-model:visible="visibleModal" mode="modal" header="新增合作伙伴" :confirm-btn="{
-                    content: '保存中...',
-                    theme: 'primary',
-                    loading: loading,
-                }" :on-confirm="() => (visibleModal = false)"><template #body>
-                        <!-- <friForm ref="formRef"></friForm> -->
-                        <component :is="friForm" ref="formRef"></component>
+                <t-dialog v-model:visible="visibleModal" mode="modal" header="新增合作伙伴"  :on-confirm="() => (visibleModal = false)">
+                     <template #body>
+                        <component :is="friForm" ref="formRef" ></component>
                     </template>
                     <template #footer>
                         <t-button theme="default" variant="base" @click="resetForm">重置</t-button>
                         <t-button theme="default" variant="base" @click="close">取消</t-button>
-                        <t-button theme="primary" @click="sendForm">
+                        <t-button theme="primary" @click="sendForm" :loading="loading">
                             确定
                         </t-button></template>
 
                 </t-dialog>
-                <t-dialog v-if="visibleBianji" v-model:visible="visibleBianji" mode="modal" header="编辑" :confirm-btn="{
-                    content: '保存中...',
-                    theme: 'primary',
-                    loading: loading,
-                }" :on-confirm="() => (visibleBianji = false)"><template #body>
-                        <!-- <component :is="friForm" ref="formRef1" :info="initialValues"></component> -->
+                <t-dialog v-if="visibleBianji" v-model:visible="visibleBianji" mode="modal" header="编辑"  :on-confirm="() => (visibleBianji = false)"><template #body>
+                        <!-- <component v-if="visibleBianji" :is="friForm" ref="formRef1" :info="initialValues"></component> -->
                         <friForm v-if="visibleBianji" ref="formRef1" :info="initialValues"></friForm>
                     </template>
                     <template #footer>
-                        <t-button theme="default" variant="base" @click="formRef1.onReset()">重置</t-button>
+                        <t-button theme="default" variant="base" @click="formRef1.restFunction()">重置</t-button>
                         <t-button theme="default" variant="base" @click="visibleBianji = false">取消</t-button>
-                        <t-button theme="primary" @click="sendForm1">
+                        <t-button theme="primary" @click="sendForm1" :loading="loading">
                             确定
                         </t-button></template>
                 </t-dialog>
@@ -84,7 +76,7 @@
 import edit from "../../components/mdEditor.vue";
 import { useRequest, updateState } from "alova";
 import { ArticleType, ArticleDetail } from "@/api/methods/article";
-import { ref, getCurrentInstance } from "vue";
+import { ref, getCurrentInstance, watch } from "vue";
 import { AddIcon } from 'tdesign-icons-vue-next';
 import friForm from '@/components/friForm.vue'
 import {
@@ -95,12 +87,8 @@ const { send: getid, onSuccess, data } = useRequest(() => ArticleType({ typename
 const { send: getFri, data: friData } = useRequest((params) => FriendList(params))
 const { send: delLink } = useRequest((id) => DeleteFriend(id), { immediate: false })
 
-// onSuccess(e => {
-//     console.log(data)
-//     getArticleInfo(e.data[0])
-// })
+
 const disable0 = ref(true)
-const loading = ref(false)
 
 const toggleDisable0 = () => {
     disable0.value = !disable0.value;
@@ -118,23 +106,30 @@ const close = () => {
 const formRef = ref(null);
 
 const formRef1 = ref(null);
-
+const submiting = ref(null);
 const resetForm = () => {
-    formRef.value.onReset()
+    formRef.value.restFunction()
 };
 const sendForm = async () => {
+    loading.value=true
     let result = await formRef.value.onSubmit()
     if (result == 200) {
         visibleModal.value = false
+        loading.value=false
+
     }
 };
 const sendForm1 = async () => {
+    loading.value=true
+
     let result = await formRef1.value.onSubmit()
     if (result == 200) {
         visibleBianji.value = false
+        loading.value=false
+
     }
 };
-const initialValues= ref({
+const initialValues = ref({
     name: '',
     desc: '',
     email: '',
@@ -150,7 +145,7 @@ const getOptions = (item) => {
             value: 1,
             onClick: () => {
 
-                initialValues.value=item
+                initialValues.value = item
                 visibleBianji.value = true;
             },
 
@@ -171,6 +166,8 @@ const getOptions = (item) => {
         },
     ];
 }
+const loading = ref(false)
+
 
 const cover = 'https://tdesign.gtimg.com/site/source/card-demo.png';
 </script>
