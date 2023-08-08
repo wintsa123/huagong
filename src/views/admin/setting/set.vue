@@ -13,7 +13,7 @@
                                 item.value }}</span>
 
                             <t-input v-model="item.value" v-if="item.type !== 'switch' && editable" autoWidth autofocus
-                                clearable  />
+                                clearable />
 
                         </template>
                     </t-list-item-meta>
@@ -38,17 +38,15 @@
 </template>
 <script setup lang="jsx">
 import { useRequest, updateState } from "alova";
-import { ref } from "vue";
-
+import { ref ,onActivated} from "vue";
 import { getSetting, updateSetting } from "@/api/methods/setting.js";
 import { CloseIcon, CheckIcon, EditIcon, SaveIcon } from 'tdesign-icons-vue-next';
 import { cloneDeep } from "lodash";
 const editable = ref(false)
-
 const renderContent = (h, data) => {
     return data.value == 1 ? (<CheckIcon />) : (<CloseIcon />);
 };
-const { data } = useRequest(getSetting, {
+const { data } = useRequest(()=>getSetting(), {
     managedStates: {
         editable
     },
@@ -62,7 +60,6 @@ const isSwitchOn = (value) => {
 const updateSwitchValue = async (event) => {
     event.loading = true
     let params = cloneDeep(event)
-    
     if (params.value == '0') {
         params.value = '1'
     } else {
@@ -70,8 +67,10 @@ const updateSwitchValue = async (event) => {
     }
     let result = await send(params)
     if (result.code == 200) {
-        updateState(getSetting, (e) => {
-            let tmp = e.filter(item => item.id == event.id)
+        
+        updateState(getSetting(), (e) => {
+            console.log(e)
+            let tmp = e.value?e.value.filter(item => item.id == event.id):e.filter(item => item.id == event.id)
             tmp.forEach(element => {
                 element.value = event.value == '0' ? '1' : '0';
             })
@@ -85,9 +84,10 @@ const updateValue = async (event) => {
     let params = cloneDeep(event)
     let result = await send(params)
     if (result.code == 200) {
-        updateState(getSetting, {
+        updateState(getSetting(), {
             data: (e) => {
-                let tmp = e.filter(item => item.id == event.id)
+                console.log(e)
+                let tmp = e.value?e.value.filter(item => item.id == event.id):e.filter(item => item.id == event.id)
                 tmp.forEach(element => {
                     element.value = event.value
                 })
@@ -106,4 +106,5 @@ const updateValue = async (event) => {
     width: 150px;
     display: flex;
     justify-content: space-around;
-}</style>
+}
+</style>

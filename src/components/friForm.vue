@@ -26,13 +26,15 @@
     </t-space>
 </template>
 <script setup>
-import { ref, reactive, computed, unref, onMounted, watch } from 'vue';
+import { ref, reactive, computed, unref, onMounted, watch,onActivated  } from 'vue';
 import { MessagePlugin } from 'tdesign-vue-next';
 import imgUpload from '@/components/Imgupload.vue'
 import { useRequest, invalidateCache, updateState } from "alova";
 import { useForm } from '@alova/scene-vue';
 import { cloneDeep } from "@pureadmin/utils"
-
+// onActivated(() => {
+//   console.log('first')
+// });
 import {
     CreateFriend,
     UpdateFriend,

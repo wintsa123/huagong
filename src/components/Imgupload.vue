@@ -15,7 +15,7 @@
           <t-upload ref="uploadRef" v-model="files" :auto-upload="autoUpload" accept="image/*" theme="image" :abridge-name="[10, 8]"
             :format-Request="formatRequest" action="https://upload-z2.qiniup.com/" :headers="seesion"
             :formatResponse="formatResponse" :on-Success="handleRequestSuccess" :on-fail="handleRequestFail"
-            :on-Remove="handleRemove" />
+             />
         </t-space>
       </t-col></t-row>
   </div>
@@ -104,12 +104,7 @@ const handleRequestSuccess = async (e) => {
 
 }
 const uploadRef=ref(null)
-const handleRemove =  (e) => {
-  files.value = [];
 
-  // files._rawValue=[]
-}
-defineExpose({handleRemove});
 const seesion = { Authorization: "Bearer " + sessionStorage.getItem("Bearer") }
 </script>
   

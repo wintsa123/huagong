@@ -38,8 +38,8 @@
     <t-layout>
       <t-header class="flex justify-between	items-center">
         <t-breadcrumb :style="{ backgroundColor: 'white', border: '0px solid ' }">
-          <t-breadcrumbItem  v-for="breadcrumb, index in breadcrumbs" :key="breadcrumb.to"
-            :router="router" :to="{ path: breadcrumb.to }">
+          <t-breadcrumbItem v-for="breadcrumb, index in breadcrumbs" :key="breadcrumb.to" :router="router"
+            :to="{ path: breadcrumb.to }">
             {{ breadcrumb.text }}</t-breadcrumbItem>
         </t-breadcrumb>
 
@@ -53,13 +53,13 @@
 
         <!-- <router-view >
         </router-view>  -->
-        <router-view v-slot="{Component,route}" >
+        <router-view v-slot="{ Component }">
 
-          <KeepAlive :include="cachedViews" >
-            <component :is="Component" :key="route.fullPath" />
+          <KeepAlive :include="cachedViews">
+            <component :is="Component" />
           </KeepAlive>
         </router-view>
-      
+
       </t-content>
     </t-layout>
 
@@ -71,19 +71,21 @@ import { createAvatar } from '@dicebear/core';
 import { adventurerNeutral } from '@dicebear/collection';
 import UserVue from '../components/User.vue';
 const User = UserVue
-import { ref, watch,computed } from 'vue' 
+import { ref, watch, computed } from 'vue'
 
 const cachedViews = ref([])
 const router = useRouter()
 const route = useRoute()
+if (route.meta.keepAlive && cachedViews.value.indexOf(route.name) == -1) {
+  cachedViews.value.push(route.name)
+}
 // 监听路由改变
 watch(
   () => route.path,
   () => {
     // 缓存页面
-    if(route.meta.keepAlive && cachedViews.value.indexOf(route.name) == -1) {
+    if (route.meta.keepAlive && cachedViews.value.indexOf(route.name) == -1) {
       cachedViews.value.push(route.name)
-      console.log(cachedViews)
     }
   }
 )
@@ -168,8 +170,7 @@ const menu = generateMenuFromRoutes(router.options.routes)
 
 
 </script>
-<style > 
-.t-breadcrumb{
-  height: var(--td-comp-size-xxxl);
-}
+<style > .t-breadcrumb {
+   height: var(--td-comp-size-xxxl);
+ }
 </style>

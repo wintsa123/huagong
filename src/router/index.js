@@ -66,7 +66,7 @@ const router = createRouter({
         // 后台页面路由配置
         {
           path: "/admin/dash",
-          name: "dash",
+          name: "dashboard",
           meta: { breadcrumb: "仪表盘", icon: "dashboard" ,keepAlive:true},
           component: () => import("../views/admin/dashboard.vue"),
         },
@@ -84,43 +84,43 @@ const router = createRouter({
         },
         {
           path: "/admin/user",
-          name: "userEdit",
+          name: "UserView",
           meta: { breadcrumb: "用户管理", icon: "user-circle" },
           component: () => import("../views/admin/UserView.vue"),
         },
         {
           path: "/admin/edit",
-          name: "edit",
+          name: "changehome",
           meta: { breadcrumb: "门户编辑", icon: "edit-1" },
           redirect: "/admin/edit/changehome",
           children: [
             {
               path: "/admin/edit/changehome",
-              name: "editphoto",
+              name: "photo",
               meta: { breadcrumb: "首页",keepAlive:true },
               component: () => import("../views/admin/photo.vue"),
             },
             {
               path: "/admin/edit/server",
-              name: "editserver",
+              name: "server1",
               meta: { breadcrumb: "工厂环境" },
               component: () => import("../views/admin/server1.vue"),
             },
             {
               path: "/admin/edit/about",
-              name: "editabout",
+              name: "about",
               meta: { breadcrumb: "关于我们" },
               component: () => import("../views/admin/about.vue"),
             },
             {
               path: "/admin/edit/fri",
-              name: "editfri",
-              meta: { breadcrumb: "合作伙伴",keepAlive:true },
-              component: () => import("../views/admin/fri.vue"),
+              name: "fri",
+              meta: { breadcrumb: "合作伙伴" , keepAlive:true },
+              component: () => import("@/views/admin/fri.vue"),
             },
             {
               path: "/admin/edit/callme",
-              name: "editcallme",
+              name: "callme",
               meta: { breadcrumb: "联系我们" },
               component: () => import("../views/admin/callme.vue"),
             },
@@ -129,7 +129,7 @@ const router = createRouter({
         {
           path: "/admin/otherNet",
           name: "other",
-          meta: { breadcrumb: "第三方网页", icon: "internet" },
+          meta: { breadcrumb: "第三方网页", icon: "internet", },
           redirect: "/admin/otherNet/Markdowm",
 
           children: [
@@ -163,7 +163,7 @@ const router = createRouter({
         {
           path: "/admin/setting",
           name: "setting",
-          meta: { breadcrumb: "系统设置", icon: "setting" ,keepAlive:true},
+          meta: { breadcrumb: "系统设置", icon: "setting" },
           redirect: "/admin/setting/set",
           children: [
             {

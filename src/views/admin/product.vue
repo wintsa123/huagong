@@ -12,14 +12,12 @@
                     drag-sort="col" @drag-sort="onDragSort" v-model:filterValue="filterValue"
                     @filter-change="onFilterChange">
                     <template #topContent>
-
                         <t-space class="w-full ">
                             <div class="m-2 ">
                                 <t-checkbox v-model="stripe"> 显示斑马纹 </t-checkbox>
                                 <t-checkbox v-model="bordered"> 显示表格边框 </t-checkbox>
                                 <t-checkbox v-model="tableLayout"> 宽度自适应 </t-checkbox>
                                 <t-checkbox v-model="showPhoto"> 显示图片</t-checkbox>
-
                             </div>
                             <div class="grow flex justify-end mr-3"> <t-button theme="primary" :onclick="deleteArticle"
                                     class="mr-3">

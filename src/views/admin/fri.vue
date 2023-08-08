@@ -21,7 +21,7 @@
 
                             <template #actions>
                                 <t-dropdown :options="getOptions(item)" :min-column-width="80">
-                                    <t-button variant="text" shape="square">
+                                    <t-button :disabled="alldisable || !disable0" variant="text" shape="square">
                                         <more-icon />
                                     </t-button>
                                 </t-dropdown>
@@ -82,35 +82,57 @@ import { useRequest, updateState } from "alova";
 import { ArticleType, ArticleDetail } from "@/api/methods/article";
 import { getSetting, updateSetting } from "@/api/methods/setting.js";
 
-import { ref, getCurrentInstance, watch } from "vue";
 import { AddIcon } from 'tdesign-icons-vue-next';
 import friForm from '@/components/friForm.vue'
 import {
     FriendList,
     DeleteFriend
 } from "@/api/methods/friend";
-const { loading:ArticleLoading,send: getid, onSuccess, data } = useRequest(() => ArticleType({ typename: '合作伙伴' }))
-const {loading:friLoading, send: getFri, data: friData } = useRequest((params) => FriendList(params))
+import { ref, onActivated, watch } from "vue";
+
+const alldisable = ref(true)
+const { send, data: setData, onSuccess: getSuccess } = useRequest(getSetting())
+
+onActivated(e => {
+    send()
+})
+getSuccess((e) => {
+    let isflag = e.data.find(item => item.key == 'Type_link').value
+    disable0.value = !!Number(isflag)
+    alldisable.value = false
+})
+const { loading: ArticleLoading, send: getid, onSuccess, data } = useRequest(() => ArticleType({ typename: '合作伙伴' }))
+const { loading: friLoading, send: getFri, data: friData } = useRequest((params) => FriendList(params))
 const { send: delLink } = useRequest((id) => DeleteFriend(id), { immediate: false })
-const { send, data: setData } = useRequest(getSetting())
 const { send: setOpen } = useRequest((data) => updateSetting(data), {
     immediate: false
 })
 // {keyWord:'Type_link'}
-const alldisable = ref(true)
 const disable0 = ref(true)
-send().then(e => {
-    let isflag = e.find(item => item.key == 'Type_link').value
-    disable0.value = !!Number(isflag)
-    alldisable.value = false
-})
+
 const toggleDisable0 = async (e, isflag) => {
+    alldisable.value = true
+    let result
     if ((e == 1 && isflag == true) || (e == 2 && isflag == true)) {
-        let result = await setOpen({ id:9,value:'1' })
+        result = await setOpen({ id: 9, value: '0' })
     } else {
-        let result = await setOpen({ id:9,value:'0' })
+        result = await setOpen({ id: 9, value: '1' })
     }
-    disable0.value = !disable0.value;
+    if (result.code == 200) {
+        updateState(getSetting(), (e) => {
+            let tmp = e.value ? e.value.filter(item => item.id == 9) : e.filter(item => item.id == 9)
+            tmp.forEach(element => {
+                console.log(element.value)
+                element.value = element.value == '0' ? '1' : '0';
+            })
+            return e
+        })
+        alldisable.value = false
+        disable0.value = !disable0.value;
+
+
+    }
+
 }
 import { MessagePlugin } from 'tdesign-vue-next';
 import { MoreIcon } from 'tdesign-icons-vue-next';
