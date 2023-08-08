@@ -51,17 +51,15 @@
       </t-header>
       <t-content :style="{ backgroundColor: '#f0f2f5' }">
 
-        <router-view >
-        </router-view> 
-        <!-- <router-view v-slot="{Component}">
+        <!-- <router-view >
+        </router-view>  -->
+        <router-view v-slot="{Component,route}" >
 
-          <KeepAlive>
-
-            <component :is="Component" />
-
+          <KeepAlive :include="cachedViews" >
+            <component :is="Component" :key="route.fullPath" />
           </KeepAlive>
-        </router-view> -->
-
+        </router-view>
+      
       </t-content>
     </t-layout>
 
@@ -73,10 +71,25 @@ import { createAvatar } from '@dicebear/core';
 import { adventurerNeutral } from '@dicebear/collection';
 import UserVue from '../components/User.vue';
 const User = UserVue
+import { ref, watch,computed } from 'vue' 
 
+const cachedViews = ref([])
 const router = useRouter()
 const route = useRoute()
-import { ref, computed } from 'vue';
+// 监听路由改变
+watch(
+  () => route.path,
+  () => {
+    // 缓存页面
+    if(route.meta.keepAlive && cachedViews.value.indexOf(route.name) == -1) {
+      cachedViews.value.push(route.name)
+      console.log(cachedViews)
+    }
+  }
+)
+
+
+
 const collapsed2 = ref(false);
 const menuValue = ref(route.matched.at(-1).meta?.icon || route.name);
 const avatar = createAvatar(adventurerNeutral, {

@@ -4,8 +4,8 @@
         <div class="w-1/2 m-auto ">
             <t-divider class="text-xl font-bold subpixel-antialiased leading-[4em]">产品中心</t-divider>
         </div>
-        <div v-if="typeof data == 'object'" class="	rounded-lg">
-                <t-table class=" bg-white" row-key="id" :data="datas" :columns="columns" :stripe="stripe"
+        <div  class="rounded-lg">
+                <t-table :loading="productLoading" class=" bg-white" row-key="id" :data="!productLoading?datas:[]" :columns="columns" :stripe="stripe"
                     :bordered="bordered" :table-layout="tableLayout ? 'auto' : 'fixed'" size="medium"
                     :selected-row-keys="selectedRowKeys" :sort="sort" multiple-sort @sort-change="sortChange"
                     @select-change="rehandleSelectChange" :pagination="pagination" cell-empty-content="-" resizable
@@ -58,7 +58,7 @@
 </template>
   
 <script setup lang="jsx">
-import { ref, computed, unref, isRef, watch,defineComponent } from 'vue';
+import { ref, computed, watchEffect } from 'vue';
 import { useRequest, updateState } from "alova";
 import { ArticleType, DeleteArticle, UpdateArticle } from "@/api/methods/article";
 import { useRouter } from 'vue-router';
@@ -95,7 +95,6 @@ const request = (filters) => {
     }, 100);
 };
 const onFilterChange = (filters) => {
-    console.log(filters)
     filterValue.value = {
         ...filters,
     };
@@ -103,8 +102,7 @@ const onFilterChange = (filters) => {
 };
 
 import { CheckCircleFilledIcon, CloseCircleFilledIcon, DeleteIcon, AddIcon } from 'tdesign-icons-vue-next';
-const { send, onSuccess, data } = useRequest(() => ArticleType({ typename: '产品中心' }), {
-   
+const {loading:productLoading, send, onSuccess, data } = useRequest(() => ArticleType({ typename: '产品中心' }), {
     initialData: {
         "code": 200,
         "data": {
@@ -122,7 +120,6 @@ const { send, onSuccess, data } = useRequest(() => ArticleType({ typename: '产�
         "message": "获取成功！"
     },
 })
-
 const { send: delId, onSuccess: delList } = useRequest((id) => DeleteArticle(id), {
     immediate: false,
 })
@@ -133,7 +130,7 @@ const { send: updateArticle } = useRequest((data) => UpdateArticle(data), {
 });
 
 const createArticle = () => {
-    router.push({ name: 'markdowm编辑' })
+    router.push({ name: 'markdowm' })
 }
 const deleteArticle = async () => {
     try {
@@ -184,7 +181,6 @@ const stripe = ref(true);
 const bordered = ref(true);
 const tableLayout = ref(false);
 const showPhoto = ref(true);
-
 const columns = computed(() => [
     { colKey: 'row-select', type: 'multiple', width: 50, },
     {
@@ -367,7 +363,7 @@ const ChangeArticle =async (row) => {
     storageLocal().setItem('info', {
         row
     })
-    await router.push({ name: 'markdowm编辑' })
+    await router.push({ name: 'markdowm' })
 
 
 }

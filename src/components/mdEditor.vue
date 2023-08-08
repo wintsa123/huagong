@@ -26,9 +26,9 @@
     </t-form-item>
     <t-form-item>
       <t-space size="small">
-        <t-button theme="primary" type="submit" :loading="loading">提交</t-button>
+        <t-button theme="primary" type="submit" :loading="loading" :disabled="disabled">提交</t-button>
         <!-- 下方示例代码，有效，勿删 -->
-        <t-button theme="default" variant="base" type="reset">重置</t-button>
+        <t-button theme="default" variant="base" type="reset" :disabled="disabled">重置</t-button>
       </t-space>
     </t-form-item>
   </t-form>
@@ -118,7 +118,6 @@ const form = ref(null);
 const disabled = ref(props.disabled);
 const FORM_RULES = { title: [{ required: true, message: "标题必填" }] };
 const info = _.cloneDeep(storageLocal().getItem('info'))
-console.log(info)
 storageLocal().removeItem('info')
 
 const formData = reactive({
@@ -255,14 +254,7 @@ const onSubmit = async ({ validateResult, firstError }) => {
   }
 };
 const onReset = () => {
-  // formData.title = props.data.title;
-  // formData.desc = props.data.desc;
-  // formData.text = props.data.content ? props.data.content : formData.content;
-  // formData.imgurl = props.data.head_img;
-  // formData.tags = props.data.tags;
-  // formData.status = props.data.status;
-  // formData.types = [props.data.types[0].id]
-  console.log(formData)
+
   MessagePlugin.success("重置成功");
 };
 getTokenSuccess((e) => {
@@ -296,4 +288,10 @@ const onUploadImg = async (files, callback) => {
 .edit :deep(.t-form__controls){
  margin-left: 0px !important;
 }
+:deep(.md-editor-toolbar-wrapper .md-editor-toolbar-left ),
+:deep(.md-editor-toolbar-wrapper  .md-editor-toolbar-right)
+{
+  flex-wrap:wrap 
+}
+
 </style>

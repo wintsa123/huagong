@@ -44,7 +44,6 @@ export const alovaInstance = createAlova({
         return json;
     },
     onError: (err, method) => {
-      console.log(err.message);
     }
    
   },

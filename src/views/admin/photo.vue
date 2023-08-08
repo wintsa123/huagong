@@ -2,7 +2,7 @@
 
       <t-collapse :default-value="[0]" @change="handlePanelChange">
         <t-collapse-panel key="1" header="首页轮播图列表">
-          <div class="flex flex-wrap" v-if="listData&&listData.length>0"><t-card bordered class="basis-1/5 m-8" v-for="(item, index) in listData"
+          <div class="flex flex-wrap" v-if="!loading"><t-card bordered class="basis-1/5 m-8" v-for="(item, index) in listData"
               :key="item.qiniu_key">
               <template #cover>
                 <div >
@@ -38,7 +38,7 @@
             </t-card></div>
           <div>新增轮播图
             <t-row><t-col>
-                <imgUpload prefix="homeImage/"></imgUpload>
+                <imgUpload ref="imgRef" prefix="homeImage/" v-model:upload-img="Imgurl"></imgUpload>
               </t-col></t-row>
           </div>
         </t-collapse-panel>
@@ -49,20 +49,30 @@
   
 <script setup>
 import {  DeleteIcon, BrowseIcon ,DownloadIcon} from 'tdesign-icons-vue-next';
-import { ref, reactive } from "vue";
+import { ref, reactive,watch } from "vue";
 import { downloadByOnlineUrl } from "@pureadmin/utils"
 
 import { useRequest, useWatcher, updateState } from "alova";
 import { getlistByprefix, fetchDeleteQiniuData, getToken } from '../../api/methods/qiniuyun.js'
 import { QINIU_CDN_URL } from "@/config.js";
-import imgUpload from "../../components/Imgupload.vue";
+import imgUpload from "../../components/imgupload.vue";
 import { actionDelegationMiddleware } from '@alova/scene-vue';
 const { send: delPhoto, data } = useRequest((id) => fetchDeleteQiniuData(id), {
   immediate: false
 })
+const imgRef = ref(null); // 创建 ref
+
 const list = ref([]);
-const { send, data: listData, onSuccess } = useRequest(() => getlistByprefix({prefix:'homeImage/'}), {
- 
+const Imgurl = ref('');
+watch(Imgurl,(data)=>{
+
+  if (data.length>0) {
+    
+    // console.log(imgRef.value.handleRemove)
+    
+  }
+})
+const {loading, send, data: listData, onSuccess } = useRequest(() => getlistByprefix({prefix:'homeImage/'}), {
   force: isForce => { return !!isForce },
   middleware: actionDelegationMiddleware('getHomephohto')
 })

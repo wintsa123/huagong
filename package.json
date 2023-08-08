@@ -1,6 +1,7 @@
 {
-  "name": "sahuagong",
-  "version": "0.0.0",
+  "name": "huagong-System",
+  "version": "1.0",
+  "updateTime": "2023/8/5",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -14,6 +15,7 @@
     "@dicebear/collection": "^6.0.4",
     "@dicebear/core": "^6.0.4",
     "@pureadmin/utils": "^1.9.7",
+    "@rollup/plugin-replace": "^5.0.2",
     "@vavt/md-editor-extension": "^3.0.0",
     "alova": "^2.9.1",
     "axios": "^1.4.0",

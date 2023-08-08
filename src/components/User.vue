@@ -54,7 +54,6 @@ const {
     initialData: { data:   { updated_at: '****', receive_comments_total: '0', articles_total: '0', roles: [{ role_name: 'admin' }] }}
     // 请求响应前，data的初始值
 });
-console.log(data)
 let clickHandler = () => {
     sessionStorage.removeItem('Bearer');
     router.push('/login');

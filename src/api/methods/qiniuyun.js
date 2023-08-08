@@ -20,8 +20,6 @@ export const fetchQiniuDataList = (params) =>
   alovaInstance.Get("/qiniu_data/list", {
     params: params,
     transformData(rawData, headers) {
-      // console.log(rawData.data)
-
       return rawData.data.rows.map((item) => {
         return item;
       });

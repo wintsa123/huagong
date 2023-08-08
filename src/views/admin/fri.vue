@@ -3,14 +3,15 @@
         <t-divider class="text-xl font-bold subpixel-antialiased">合作伙伴</t-divider>
     </div>
     <t-collapse>
-        <t-collapse-panel key="1" header="友链格式化" :disabled="!disable0">
+        <t-collapse-panel key="1" header="友链格式化" :disabled="alldisable || !disable0">
             <template #headerRightContent>
                 <t-space size="small">
-                    <t-checkbox :checked="disable0" @change="toggleDisable0">启用</t-checkbox>
+                    <t-checkbox :disabled="alldisable" :checked="disable0"
+                        @change="toggleDisable0(1, disable0)">启用</t-checkbox>
                 </t-space>
             </template>
             <template #content>
-                <div class="waterfall-container" v-if="!!friData">
+                <div class="waterfall-container" v-if="!friLoading">
                     <div class="item" v-for="item in friData.data.rows"> <t-card bordered theme="poster2"
                             :cover="item.avatar || cover">
                             <template #footer>
@@ -27,13 +28,14 @@
                             </template></t-card></div>
                 </div>
 
-                <t-button theme="primary" @click="visibleModal = true">
+                <t-button theme="primary" @click="visibleModal = true" :disabled="alldisable || !disable0">
                     <template #icon><add-icon /></template>
                     新建
                 </t-button>
-                <t-dialog v-model:visible="visibleModal" mode="modal" header="新增合作伙伴"  :on-confirm="() => (visibleModal = false)">
-                     <template #body>
-                        <component :is="friForm" ref="formRef" ></component>
+                <t-dialog v-model:visible="visibleModal" mode="modal" header="新增合作伙伴"
+                    :on-confirm="() => (visibleModal = false)">
+                    <template #body>
+                        <component :is="friForm" ref="formRef"></component>
                     </template>
                     <template #footer>
                         <t-button theme="default" variant="base" @click="resetForm">重置</t-button>
@@ -43,7 +45,8 @@
                         </t-button></template>
 
                 </t-dialog>
-                <t-dialog v-if="visibleBianji" v-model:visible="visibleBianji" mode="modal" header="编辑"  :on-confirm="() => (visibleBianji = false)"><template #body>
+                <t-dialog v-if="visibleBianji" v-model:visible="visibleBianji" mode="modal" header="编辑"
+                    :on-confirm="() => (visibleBianji = false)"><template #body>
                         <!-- <component v-if="visibleBianji" :is="friForm" ref="formRef1" :info="initialValues"></component> -->
                         <friForm v-if="visibleBianji" ref="formRef1" :info="initialValues"></friForm>
                     </template>
@@ -56,15 +59,16 @@
                 </t-dialog>
             </template>
         </t-collapse-panel>
-        <t-collapse-panel key="2" header="友链自定义" :disabled="disable0">
+        <t-collapse-panel key="2" header="友链自定义" :disabled="alldisable || disable0">
             <template #headerRightContent>
                 <t-space size="small">
-                    <t-checkbox :checked="!disable0" @change="toggleDisable0">启用</t-checkbox>
+                    <t-checkbox :disabled="alldisable" :checked="!disable0"
+                        @change="toggleDisable0(2, disable0)">启用</t-checkbox>
                 </t-space>
             </template>
             <template #content>
-                <div v-if="typeof data == 'object'" class="w-full">
-                    <edit :data="data.data.rows[0]" :disabled="disable0" />
+                <div v-if="!ArticleLoading" class="w-full">
+                    <edit :data="data.data.rows[0]" :disabled="alldisable || disable0" />
                 </div>
             </template>
         </t-collapse-panel>
@@ -73,9 +77,11 @@
 </template>
     
 <script setup>
-import edit from "../../components/mdEditor.vue";
+import edit from "@/components/mdEditor.vue";
 import { useRequest, updateState } from "alova";
 import { ArticleType, ArticleDetail } from "@/api/methods/article";
+import { getSetting, updateSetting } from "@/api/methods/setting.js";
+
 import { ref, getCurrentInstance, watch } from "vue";
 import { AddIcon } from 'tdesign-icons-vue-next';
 import friForm from '@/components/friForm.vue'
@@ -83,19 +89,31 @@ import {
     FriendList,
     DeleteFriend
 } from "@/api/methods/friend";
-const { send: getid, onSuccess, data } = useRequest(() => ArticleType({ typename: '合作伙伴' }))
-const { send: getFri, data: friData } = useRequest((params) => FriendList(params))
+const { loading:ArticleLoading,send: getid, onSuccess, data } = useRequest(() => ArticleType({ typename: '合作伙伴' }))
+const {loading:friLoading, send: getFri, data: friData } = useRequest((params) => FriendList(params))
 const { send: delLink } = useRequest((id) => DeleteFriend(id), { immediate: false })
-
-
+const { send, data: setData } = useRequest(getSetting())
+const { send: setOpen } = useRequest((data) => updateSetting(data), {
+    immediate: false
+})
+// {keyWord:'Type_link'}
+const alldisable = ref(true)
 const disable0 = ref(true)
-
-const toggleDisable0 = () => {
+send().then(e => {
+    let isflag = e.find(item => item.key == 'Type_link').value
+    disable0.value = !!Number(isflag)
+    alldisable.value = false
+})
+const toggleDisable0 = async (e, isflag) => {
+    if ((e == 1 && isflag == true) || (e == 2 && isflag == true)) {
+        let result = await setOpen({ id:9,value:'1' })
+    } else {
+        let result = await setOpen({ id:9,value:'0' })
+    }
     disable0.value = !disable0.value;
 }
 import { MessagePlugin } from 'tdesign-vue-next';
 import { MoreIcon } from 'tdesign-icons-vue-next';
-import { cloneDeep } from "lodash";
 const visibleModal = ref(false);
 
 const close = () => {
@@ -111,21 +129,21 @@ const resetForm = () => {
     formRef.value.restFunction()
 };
 const sendForm = async () => {
-    loading.value=true
+    loading.value = true
     let result = await formRef.value.onSubmit()
     if (result == 200) {
         visibleModal.value = false
-        loading.value=false
+        loading.value = false
 
     }
 };
 const sendForm1 = async () => {
-    loading.value=true
+    loading.value = true
 
     let result = await formRef1.value.onSubmit()
     if (result == 200) {
         visibleBianji.value = false
-        loading.value=false
+        loading.value = false
 
     }
 };

@@ -74,16 +74,13 @@ import {
                 flag = true;
               }
             } else {
-              console.log(code, data, message);
             }
           } catch (error) {
-            console.log(error);
             clearInterval(timer);
           }
         }, 1000);
       });
     } catch (error) {
-      console.log(error);
       clearInterval(timer);
     }
   };

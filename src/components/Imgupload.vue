@@ -12,7 +12,7 @@
       </t-col></t-row>
     <t-row><t-col>
         <t-space>
-          <t-upload v-model="files" :auto-upload="autoUpload" accept="image/*" theme="image" :abridge-name="[10, 8]"
+          <t-upload ref="uploadRef" v-model="files" :auto-upload="autoUpload" accept="image/*" theme="image" :abridge-name="[10, 8]"
             :format-Request="formatRequest" action="https://upload-z2.qiniup.com/" :headers="seesion"
             :formatResponse="formatResponse" :on-Success="handleRequestSuccess" :on-fail="handleRequestFail"
             :on-Remove="handleRemove" />
@@ -22,7 +22,7 @@
 </template>
 <script setup>
 import { QINIU_CDN_URL } from "@/config.js";
-import { ref, watch } from 'vue';
+import { ref, watch ,defineEmits} from 'vue';
 import { getHash, splitFile } from '@/util/index.js';
 import { useRequest, invalidateCache, updateState } from 'alova';
 import {
@@ -43,13 +43,11 @@ const prefix = props.prefix
 //同步传值
 props.uploadImg ? files.value = [{
   name: props.uploadImg.match(/\/([^\/]+)$/)[1], url: props.uploadImg, status: 'success',
-}] : ''
+}] :  files.value = [];
 //处理异步
-console.log(props.uploadImg )
 
 watch(() => props.uploadImg, (newData) => {
 
-  console.log(newData)
   if (newData) {
     files.value = [{
       name: newData.match(/\/([^\/]+)$/)[1], url: newData, status: 'success',
@@ -105,9 +103,13 @@ const handleRequestSuccess = async (e) => {
   }
 
 }
-const handleRemove = async (e) => {
+const uploadRef=ref(null)
+const handleRemove =  (e) => {
+  files.value = [];
 
+  // files._rawValue=[]
 }
+defineExpose({handleRemove});
 const seesion = { Authorization: "Bearer " + sessionStorage.getItem("Bearer") }
 </script>
   

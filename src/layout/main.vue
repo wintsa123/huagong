@@ -76,7 +76,6 @@ function navigateTo(key) {
   // 执行路由跳转
   switch (key) {
     case 'item-1':
-      console.log(router)
       router.push('/home');
       break;
     case 'item-2':
@@ -101,7 +100,6 @@ function navigateTo(key) {
 }
 
 function changeHandler(active) {
-  console.log('change', active);
 };
 </script>
 <style lang="less" scoped>

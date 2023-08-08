@@ -70,9 +70,7 @@ const onSubmit = async ({ validateResult, firstError ,e}) => {
 
 const onValidate = ({ validateResult, firstError }) => {
   if (validateResult === true) {
-    console.log('Validate Success');
   } else {
-    console.log('Validate Errors: ', firstError, validateResult);
   }
 };
 const rePassword = (val) =>
