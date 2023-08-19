@@ -141,7 +141,17 @@ const router = createRouter({
                 breadcrumb: "编辑器使用教程",
                 frameSrc: "https://imzbf.github.io/md-editor-rt/zh-CN/grammar",
               },
-              component: () => import("../views/admin/iframe/Markdowm.vue"),
+              component: () => import("../views/admin/iframe/iframe.vue"),
+            },
+            {
+              path: "/admin/otherNet/chinaColoe",
+              name: "chinaColoe",
+              meta: {
+                keepAlive:true,
+                breadcrumb: "中国颜色",
+                frameSrc: "http://zhongguose.com/",
+              },
+              component: () => import("../views/admin/iframe/iframe.vue"),
             },
           ],
         },
