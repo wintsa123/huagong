@@ -15,7 +15,7 @@
 </template>
 <script setup>
 import { ref, nextTick } from "vue";
-import { useRequest, invalidateCache, updateState } from "alova";
+import { useRequest, updateState } from "alova";
 import { taglist, DeleteTag } from "@/api/methods/article";
 const theme = ['primary', 'success', 'warning', 'danger']
 const { loading, data: allTag } = useRequest(() => taglist());

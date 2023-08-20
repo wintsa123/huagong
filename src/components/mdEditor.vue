@@ -3,7 +3,7 @@
     :onclick='() => { router.go(-1) }'>
     <RollbackIcon slot="icon" />返回
   </t-button>
-  <t-form   ref="form" :rules="FORM_RULES" :data="formData" :colon="true" @submit="onSubmit" @reset="onReset"
+  <t-form ref="form" :rules="FORM_RULES" :data="formData" :colon="true" @submit="onSubmit" @reset="onReset"
     :disabled="disabled" resetType="initial" class=" mt-10 mb-10 mx-auto">
     <t-form-item label="标题" name="title" v-if="shouldDisplayTitleFormItem">
       <t-input v-model.trim="formData.title" placeholder="请输入内容"></t-input>
@@ -21,7 +21,7 @@
     <t-form-item label="图片" name="imgurl" v-if="shouldDisplayImageFormItem">
       <uploadImg prefix="articleImage/" v-model:uploadImg="formData.imgurl" />
     </t-form-item>
-    <t-form-item label="内容" name="content" class="pr-10 edit" >
+    <t-form-item label="内容" name="content" class="pr-10 edit">
       <MdEditor v-model="formData.content" @onUploadImg="onUploadImg" :disabled="disabled" />
     </t-form-item>
     <t-form-item>
@@ -43,7 +43,7 @@ import { ref, reactive, watch, computed, getCurrentInstance } from "vue";
 import { MessagePlugin } from "tdesign-vue-next";
 import uploadImg from "./Imgupload.vue";
 import { RollbackIcon } from 'tdesign-icons-vue-next';
-
+import { accessAction } from '@alova/scene-vue';
 import { useRequest, invalidateCache, useFetcher, updateState } from "alova";
 import {
   CreateTag,
@@ -65,7 +65,17 @@ const props = defineProps({
   data: Object,
   disabled: Boolean,
 });
+const {
+  // fetching属性与loading相同，发送拉取请求时为true，请求结束后为false
+  fetching,
+  error,
+  onSuccess,
+  onError,
+  onComplete,
 
+  // 调用fetch后才会发送请求拉取数据，可以重复调用fetch多次拉取不同接口的数据
+  fetch
+} = useFetcher();
 //创建标签
 const { send: creatrtag } = useRequest(
   (name, color) => CreateTag({ name, color }),
@@ -83,18 +93,17 @@ const { send: upimg } = useRequest((data) => ArticleImg(data), {
   immediate: false,
 });
 const { send, data: allTag } = useRequest(() => taglist(), {
-  initialData: 
-    {
-      data: {
-        rows: {
-          label: "",
-          value: "",
-        },
+  initialData:
+  {
+    data: {
+      rows: {
+        label: "",
+        value: "",
       },
     },
-  
-  // force: isForce => { return !!isForce },
-  // middleware: actionDelegationMiddleware('getTagList')
+  },
+
+
 });
 //获取token
 const {
@@ -116,7 +125,7 @@ getTokenSuccess((e) => {
 const loading = ref(false);
 const form = ref(null);
 const disabled = ref(props.disabled);
-const FORM_RULES = { title: [{ required: true, message: "标题必填" }],tags: [{ required: true, message: "标签必填" }]};
+const FORM_RULES = { title: [{ required: true, message: "标题必填" }], tags: [{ required: true, message: "标签必填" }] };
 const info = _.cloneDeep(storageLocal().getItem('info'))
 storageLocal().removeItem('info')
 
@@ -186,7 +195,8 @@ const onSubmit = async ({ validateResult, firstError }) => {
     loading.value = true;
     let result;
     //创建文章
-    if (typeof props.data == "undefined" &&  !info ) {
+    if (typeof props.data == "undefined" && !info) {
+      console.log(formData)
       result = await creatArticle({
         title: formData.title,
         content: formData.content,
@@ -207,10 +217,18 @@ const onSubmit = async ({ validateResult, firstError }) => {
         //     return e;
         //   }
         // );
-        
-        invalidateCache(ArticleType({ typename: '产品中心' }))
+        accessAction('flashNew', delegatedActions => {
+          console.log(delegatedActions)
+          // 调用组件A中的send函数
+          delegatedActions.send();
 
-        router.go(-1);
+          // 调用组件A中的abort函数
+          delegatedActions.abort();
+        });
+        // invalidateCache(ArticleType({ typename: '产品中心' }))
+        // fetch(ArticleType({ typename: '产品中心' }))
+        await router.go(-1);
+        // await router.go(0);
       } else {
         MessagePlugin.warning(result.message);
       }
@@ -229,8 +247,11 @@ const onSubmit = async ({ validateResult, firstError }) => {
       })
       if (result.code == 200) {
         if (!!info) {
-          invalidateCache(ArticleType({ typename: '产品中心' }))
-          router.go(-1);
+          //修改文章
+          // invalidateCache(ArticleType({ typename: '产品中心' }))
+          await router.go(-1);
+          await router.go(0);
+
         } else {
           updateState(
             ArticleType({ typename: props.data.types[0].name }),
@@ -286,13 +307,12 @@ const onUploadImg = async (files, callback) => {
 };
 </script>
 <style scoped>
-.edit :deep(.t-form__controls){
- margin-left: 0px !important;
-}
-:deep(.md-editor-toolbar-wrapper .md-editor-toolbar-left ),
-:deep(.md-editor-toolbar-wrapper  .md-editor-toolbar-right)
-{
-  flex-wrap:wrap 
+.edit :deep(.t-form__controls) {
+  margin-left: 0px !important;
 }
 
+:deep(.md-editor-toolbar-wrapper .md-editor-toolbar-left),
+:deep(.md-editor-toolbar-wrapper .md-editor-toolbar-right) {
+  flex-wrap: wrap
+}
 </style>

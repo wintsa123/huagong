@@ -52,7 +52,7 @@ const onSubmit = async ({ validateResult, firstError }) => {
      sessionStorage.setItem('Bearer', a.data);
     if (a.code==200) {
 
-       await router.replace('/admin');
+       await router.replace('/');
       MessagePlugin.success(a.message);
 
     }else{

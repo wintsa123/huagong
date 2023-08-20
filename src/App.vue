@@ -1,11 +1,11 @@
 <script setup >
-import Main from './layout/main.vue'
+import admin from './layout/admin.vue'
 
 </script >
 
 <template>
 
- <router-view></router-view>
+<RouterView></RouterView>
 
 </template>
 

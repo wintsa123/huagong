@@ -93,7 +93,7 @@ watch(
 
 
 const collapsed2 = ref(false);
-const menuValue = ref(route.matched.at(-1).meta?.icon || route.name);
+const menuValue = ref(route.matched.length>0 ?route.matched.at(-1).meta.icon || route.name :'null');
 const avatar = createAvatar(adventurerNeutral, {
   seed: 'Felix',
   flip: false,
@@ -137,7 +137,7 @@ const breadcrumbs = computed(() => {
 function generateMenuFromRoutes(routes) {
   const menu = [];
   routes.forEach((route) => {
-    if (route.path.startsWith('/admin') && route.meta) {
+    if (route.meta?.menu==true) {
       const menuItem = {
         label: route.meta?.breadcrumb || route.name,
         key: route.meta?.icon || route.name,

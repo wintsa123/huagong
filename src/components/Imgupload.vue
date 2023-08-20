@@ -24,7 +24,7 @@
 import { QINIU_CDN_URL } from "@/config.js";
 import { ref, watch ,defineEmits} from 'vue';
 import { getHash, splitFile } from '@/util/index.js';
-import { useRequest, invalidateCache, updateState } from 'alova';
+import { useRequest } from 'alova';
 import {
   getToken,
   SyncToSql,

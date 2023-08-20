@@ -28,7 +28,7 @@ import { ref, reactive } from 'vue';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { DesktopIcon, LockOnIcon } from 'tdesign-icons-vue-next';
 import { Changepwd } from '@/api/methods/user';
-import { useRequest, invalidateCache } from 'alova';
+import { useRequest } from 'alova';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 const form = ref(null);

@@ -60,6 +60,8 @@ import { ref, computed, watchEffect } from 'vue';
 import { useRequest, updateState } from "alova";
 import { ArticleType, DeleteArticle, UpdateArticle } from "@/api/methods/article";
 import { useRouter } from 'vue-router';
+import { actionDelegationMiddleware } from '@alova/scene-vue';
+
 import { MessagePlugin, DateRangePickerPanel } from "tdesign-vue-next";
 import isNumber from 'lodash/isNumber';
 import _ from "lodash";
@@ -117,6 +119,7 @@ const {loading:productLoading, send, onSuccess, data } = useRequest(() => Articl
         },
         "message": "获取成功！"
     },
+    actionDelegationMiddleware: actionDelegationMiddleware('flashNew')
 })
 const { send: delId, onSuccess: delList } = useRequest((id) => DeleteArticle(id), {
     immediate: false,
@@ -158,7 +161,6 @@ const deleteArticle = async () => {
             });
             pagination.value.total = pagination.value.total - selectedRowKeys.value.length
             selectedRowKeys.value = []
-            // invalidateCache(ArticleType({ typename: '产品中心' }))
 
 
         } else {
