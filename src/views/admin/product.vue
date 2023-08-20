@@ -119,7 +119,8 @@ const {loading:productLoading, send, onSuccess, data } = useRequest(() => Articl
         },
         "message": "获取成功！"
     },
-    actionDelegationMiddleware: actionDelegationMiddleware('flashNew')
+    force: true,
+    middleware: actionDelegationMiddleware('flashNew')
 })
 const { send: delId, onSuccess: delList } = useRequest((id) => DeleteArticle(id), {
     immediate: false,
@@ -326,7 +327,7 @@ const datas = ref()
 onSuccess((e) => {
     pagination.value.defaultCurrent = e.data.data.nowPage
     pagination.value.total = e.data.data.total
-
+    console.log('first')
     datas.value = [...e.data.data.rows]
 
 })

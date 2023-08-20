@@ -210,23 +210,10 @@ const onSubmit = async ({ validateResult, firstError }) => {
       });
       if (result.code == 200) {
         MessagePlugin.success(result.message);
-        // updateState(
-        //   ArticleType({ typename: '产品中心' }),
-        //   (e) => {
-        //     console.log(e)
-        //     return e;
-        //   }
-        // );
-        accessAction('flashNew', delegatedActions => {
-          console.log(delegatedActions)
-          // 调用组件A中的send函数
-          delegatedActions.send();
 
-          // 调用组件A中的abort函数
-          delegatedActions.abort();
+        accessAction('flashNew', delegatedActions => {
+          delegatedActions.send({ typename: '产品中心' });
         });
-        // invalidateCache(ArticleType({ typename: '产品中心' }))
-        // fetch(ArticleType({ typename: '产品中心' }))
         await router.go(-1);
         // await router.go(0);
       } else {
@@ -248,9 +235,10 @@ const onSubmit = async ({ validateResult, firstError }) => {
       if (result.code == 200) {
         if (!!info) {
           //修改文章
-          // invalidateCache(ArticleType({ typename: '产品中心' }))
+          accessAction('flashNew', delegatedActions => {
+            delegatedActions.send({ typename: '产品中心' });
+          }); 
           await router.go(-1);
-          await router.go(0);
 
         } else {
           updateState(
