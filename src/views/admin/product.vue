@@ -346,6 +346,7 @@ const update = async (row) => {
     if (result.code == 200) {
         row.loading = false
         updateState(send(), (e) => {
+            console.log(e)
             e.data.rows.forEach(e => {
                 if (e.id == row.id) {
                     e.status = e.status == 1 ? 2 : 1

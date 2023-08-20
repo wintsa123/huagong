@@ -131,7 +131,6 @@ const router = createRouter({
           name: "other",
           meta: { breadcrumb: "第三方网页", icon: "internet", },
           redirect: "/admin/otherNet/Markdowm",
-
           children: [
             {
               path: "/admin/otherNet/Markdowm",
@@ -183,6 +182,14 @@ const router = createRouter({
               component: () => import("@/views/admin/setting/set.vue"),
             },
             {
+              path: "/admin/tagManage/",
+              name: "tagManage",
+              meta: { breadcrumb: "标签管理" ,keepAlive:true},
+
+              props: true,
+              component: () => import("@/views/admin/setting/tag.vue"),
+            },
+            {
               path: "/admin/setting/info",
               name: "info",
               meta: { breadcrumb: "系统版本" ,keepAlive:true},
@@ -198,6 +205,7 @@ const router = createRouter({
           props: true,
           component: () => import("@/components/mdEditor.vue"),
         },
+       
       ],
     },
     {

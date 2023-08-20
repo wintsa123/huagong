@@ -3,7 +3,7 @@
     :onclick='() => { router.go(-1) }'>
     <RollbackIcon slot="icon" />返回
   </t-button>
-  <t-form ref="form" :rules="FORM_RULES" :data="formData" :colon="true" @submit="onSubmit" @reset="onReset"
+  <t-form   ref="form" :rules="FORM_RULES" :data="formData" :colon="true" @submit="onSubmit" @reset="onReset"
     :disabled="disabled" resetType="initial" class=" mt-10 mb-10 mx-auto">
     <t-form-item label="标题" name="title" v-if="shouldDisplayTitleFormItem">
       <t-input v-model.trim="formData.title" placeholder="请输入内容"></t-input>
@@ -83,7 +83,7 @@ const { send: upimg } = useRequest((data) => ArticleImg(data), {
   immediate: false,
 });
 const { send, data: allTag } = useRequest(() => taglist(), {
-  initialData: [
+  initialData: 
     {
       data: {
         rows: {
@@ -92,7 +92,7 @@ const { send, data: allTag } = useRequest(() => taglist(), {
         },
       },
     },
-  ],
+  
   // force: isForce => { return !!isForce },
   // middleware: actionDelegationMiddleware('getTagList')
 });
@@ -116,7 +116,7 @@ getTokenSuccess((e) => {
 const loading = ref(false);
 const form = ref(null);
 const disabled = ref(props.disabled);
-const FORM_RULES = { title: [{ required: true, message: "标题必填" }] };
+const FORM_RULES = { title: [{ required: true, message: "标题必填" }],tags: [{ required: true, message: "标签必填" }]};
 const info = _.cloneDeep(storageLocal().getItem('info'))
 storageLocal().removeItem('info')
 
@@ -207,6 +207,7 @@ const onSubmit = async ({ validateResult, firstError }) => {
         //     return e;
         //   }
         // );
+        
         invalidateCache(ArticleType({ typename: '产品中心' }))
 
         router.go(-1);

@@ -71,3 +71,7 @@ export const taglist = (params) =>
     },
 
   });
+
+  //删除标签
+export const DeleteTag = (id) =>
+alovaInstance.Delete(`/tag/delete/${id}`);
