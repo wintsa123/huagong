@@ -1,11 +1,8 @@
-<script setup >
-import admin from './layout/admin.vue'
 
-</script >
 
 <template>
-
-<RouterView></RouterView>
-
+    <div>
+        <RouterView></RouterView>
+    </div>
 </template>
 
