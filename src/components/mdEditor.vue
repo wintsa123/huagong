@@ -210,12 +210,14 @@ const onSubmit = async ({ validateResult, firstError }) => {
       });
       if (result.code == 200) {
         MessagePlugin.success(result.message);
-
+        //bug
+        //两个方法都无法正常重新发起请求
+        // fetch(ArticleType({ typename: '产品中心' }))
+        // invalidateCache(ArticleType({ typename: '产品中心' }))
         accessAction('flashNew', delegatedActions => {
           delegatedActions.send({ typename: '产品中心' });
         });
         await router.go(-1);
-        // await router.go(0);
       } else {
         MessagePlugin.warning(result.message);
       }
