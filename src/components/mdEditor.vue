@@ -178,7 +178,8 @@ watch(
 const createOptions = async (val) => {
   let result = await creatrtag(val, "green");
   await updateState(taglist(), (todoList) => {
-    if (_.some(todoList.rows, { value: val })) {
+   console.log(val)
+    if (todoList.rows.some(e=>e.value==val)) {
       return todoList;
     }
     todoList.rows.push({ label: val, value: result.data, id: result.data });
