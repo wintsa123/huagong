@@ -57,6 +57,7 @@ import {
   getToken,
   SyncToSql,
 } from "@/api/methods/qiniuyun.js";
+import { removeBothSidesSpace } from "@pureadmin/utils"
 import { QINIU_CDN_URL } from "@/config.js";
 import { MdEditor } from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
@@ -176,13 +177,14 @@ watch(
   }
 );
 const createOptions = async (val) => {
-  let result = await creatrtag(val, "green");
+  const value=removeBothSidesSpace (val)
+  let result = await creatrtag(value, "green");
   await updateState(taglist(), (todoList) => {
-   console.log(val)
-    if (todoList.rows.some(e=>e.value==val)) {
+    if (todoList.rows.some(e=> e.label==value)) {
+      
       return todoList;
     }
-    todoList.rows.push({ label: val, value: result.data, id: result.data });
+    todoList.rows.push({ label: value, value: result.data, id: result.data });
     return todoList;
   });
   formData.tags[formData.tags.length - 1] = result.data;
