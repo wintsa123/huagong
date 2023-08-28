@@ -115,7 +115,7 @@ const router = createRouter({
             {
               path: "/edit/fri",
               name: "fri",
-              meta: { breadcrumb: "合作伙伴" , keepAlive:true,menu:true },
+              meta: { breadcrumb: "合作伙伴" , menu:true },
               component: () => import("@/views/admin/fri.vue"),
             },
             {

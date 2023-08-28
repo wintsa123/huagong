@@ -1,6 +1,6 @@
 <template>
     <t-space direction="vertical" size="large">
-        <t-form ref="form" :data="formData" :rules="rules" colon>
+        <t-form ref="form" :data="formData" :rules="rules" colon reset-type="initial"  >
             <t-form-item label="公司名" name="name">
                 <t-input v-model="formData.name"></t-input>
             </t-form-item>
@@ -50,7 +50,7 @@ const {
     send: submit,
     // 提交成功回调绑定
     onSuccess,
-    reset: restFunction
+    reset
 } = useForm(
     data => {
         // 可以在此转换表单数据并提交
@@ -58,7 +58,7 @@ const {
     },
     {
         resetAfterSubmiting: true,
-        // resetAfterSubmiting: true,
+
         // 初始化表单数据
         initialForm: {
             name: props.info?.name || '',
@@ -117,11 +117,14 @@ const onSubmit = async () => {
             let result = await submit()
             if (result.code == 200) {
                 MessagePlugin.success(result.message);
+
                 await updateState(FriendList(), (e) => {
                     backup['id'] = result.data.id
                     e.data.rows.push(backup)
                     return e
                 })
+                form.value.reset({ type: 'initial' });
+
                 return Promise.resolve(result.code);
 
             }
@@ -133,8 +136,14 @@ const onSubmit = async () => {
     return false
 };
 
-
-defineExpose({
+const restFunction = () => {
+//   form.value.reset();
+  // 下方为示例代码，有效，勿删
+  form.value.reset({ type: 'initial' });
+  // form.value.reset({ type: 'empty' });
+  // form.value.reset({ type: 'initial', fields: ['name'] });
+  // form.value.reset({ type: 'empty', fields: ['name'] });
+};defineExpose({
      onSubmit,restFunction
 });
 </script>

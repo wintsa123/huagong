@@ -9,7 +9,10 @@ import replace from '@rollup/plugin-replace';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(),vueJsx(), replace({
+  plugins: [vue({
+    template: {
+      compilerOptions: { isCustomElement: (tag) => tag.startsWith('wc-') }
+    }}),vueJsx(), replace({
     __APP_System__: JSON.stringify(require('./package.json').name),
     __APP_VERSION__: JSON.stringify(require('./package.json').version),
     __APP_Time_: JSON.stringify(require('./package.json').updateTime)

@@ -11,9 +11,10 @@
                 </t-space>
             </template>
             <template #content>
-                <div class="waterfall-container" v-if="!friLoading">
-                    <div class="item" v-for="item in friData.data.rows"> <t-card bordered theme="poster2"
-                            :cover="item.avatar || cover">
+                <wc-waterfall gap="10" cols="6" v-if="!friLoading">
+
+                    <div class="item" v-for="item in friData.data.rows">
+                        <t-card bordered theme="poster2" :cover="item.avatar || cover">
                             <template #footer>
                                 <t-comment :author='item.name' :title="item.desc">
                                 </t-comment>
@@ -25,15 +26,16 @@
                                         <more-icon />
                                     </t-button>
                                 </t-dropdown>
-                            </template></t-card></div>
-                </div>
+                            </template></t-card>
+                    </div>
+                </wc-waterfall>
 
                 <t-button theme="primary" @click="visibleModal = true" :disabled="alldisable || !disable0">
                     <template #icon><add-icon /></template>
                     新建
                 </t-button>
                 <t-dialog v-model:visible="visibleModal" mode="modal" header="新增合作伙伴"
-                    :on-confirm="() => (visibleModal = false)">
+                    :on-confirm="close">
                     <template #body>
                         <component :is="friForm" ref="formRef"></component>
                     </template>
@@ -46,13 +48,13 @@
 
                 </t-dialog>
                 <t-dialog v-if="visibleBianji" v-model:visible="visibleBianji" mode="modal" header="编辑"
-                    :on-confirm="() => (visibleBianji = false)"><template #body>
+                    :on-confirm="close"><template #body>
                         <!-- <component v-if="visibleBianji" :is="friForm" ref="formRef1" :info="initialValues"></component> -->
                         <friForm v-if="visibleBianji" ref="formRef1" :info="initialValues"></friForm>
                     </template>
                     <template #footer>
                         <t-button theme="default" variant="base" @click="formRef1.restFunction()">重置</t-button>
-                        <t-button theme="default" variant="base" @click="visibleBianji = false">取消</t-button>
+                        <t-button theme="default" variant="base" @click="close">取消</t-button>
                         <t-button theme="primary" @click="sendForm1" :loading="loading">
                             确定
                         </t-button></template>
@@ -77,6 +79,8 @@
 </template>
     
 <script setup>
+import 'wc-waterfall'
+
 import edit from "@/components/mdEditor.vue";
 import { useRequest, updateState } from "alova";
 import { ArticleType, ArticleDetail } from "@/api/methods/article";
@@ -139,6 +143,8 @@ import { MoreIcon } from 'tdesign-icons-vue-next';
 const visibleModal = ref(false);
 
 const close = () => {
+    visibleBianji.value=false
+    formRef.value.restFunction()
     visibleModal.value = false
 };
 
@@ -212,15 +218,15 @@ const loading = ref(false)
 const cover = 'https://tdesign.gtimg.com/site/source/card-demo.png';
 </script>
 <style scoped>
-.waterfall-container {
+/* .waterfall-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     grid-gap: 10px;
     grid-template-rows: masonry;
-}
+} */
 
-.item {
+/* .item {
     background-color: #f0f0f0;
     padding: 10px;
-}
+} */
 </style>
