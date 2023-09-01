@@ -74,8 +74,12 @@ const {
 const emailSuffix = ['@qq.com', '@163.com', '@gmail.com'];
 const rules = {
     name: [
+            { required: true, message: '公司名必填', type: 'error', trigger: 'blur' },
+
         { whitespace: true, message: '公司名不能为空' },
     ],
+    email: [{ required: true, message: '格式必须为邮箱', type: 'error' }],
+
 };
 
 

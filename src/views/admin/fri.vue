@@ -163,6 +163,8 @@ const sendForm = async () => {
         visibleModal.value = false
         loading.value = false
 
+    }else{
+        loading.value
     }
 };
 const sendForm1 = async () => {
@@ -171,6 +173,9 @@ const sendForm1 = async () => {
     let result = await formRef1.value.onSubmit()
     if (result == 200) {
         visibleBianji.value = false
+        loading.value = false
+
+    }else{
         loading.value = false
 
     }

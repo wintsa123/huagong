@@ -13,7 +13,7 @@
     <t-row><t-col>
         <t-space>
           <t-upload ref="uploadRef" v-model="files" :auto-upload="autoUpload" accept="image/*" theme="image" :abridge-name="[10, 8]"
-            :format-Request="formatRequest" action="https://upload-z2.qiniup.com/" :headers="seesion"
+            :format-Request="formatRequest" action="https://up-as0.qiniup.com/" :headers="seesion"
             :formatResponse="formatResponse" :on-Success="handleRequestSuccess" :on-fail="handleRequestFail"
              />
         </t-space>

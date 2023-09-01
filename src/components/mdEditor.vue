@@ -265,6 +265,8 @@ const onSubmit = async ({ validateResult, firstError }) => {
     }
     loading.value = false;
   } else {
+    loading.value = false;
+
     MessagePlugin.warning(firstError);
   }
 };

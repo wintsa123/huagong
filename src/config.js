@@ -8,14 +8,14 @@
 // export const GITHUB_CLIENT_ID = '8c2c07b574ae70ecfa9d';
 // export const GITHUB_OAUTH_URL = 'https://github.com/login/oauth/authorize?';
 
-export const QINIU_CDN_URL = 'http://rzm8kqg28.hn-bkt.clouddn.com/';
+export const QINIU_CDN_URL = 'http://wintsa.club/';
 
 // export const BLOG_CLIENT_URL = 'https://www.hsslive.cn';
 // export const BLOG_ADMIN_URL = 'https://admin.hsslive.cn';
 
 // export const POSTMESSAGE_TYPE = ['qq_login', 'github_login', 'login_expired'];
 
-export const QINIU_BUCKET = 'huagongsa'; // 七牛云bucket
+export const QINIU_BUCKET = 'wintsa'; // 七牛云bucket
 export const QINIU_PREFIX = {
   'image/': 'image/',
   'homeimage/': 'homeimage/',

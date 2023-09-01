@@ -52,7 +52,7 @@ export const alovaInstance = createAlova({
 
 // upload alova instance
 export const uploadAlova = createAlova({
-  baseURL: 'http://upload-z2.qiniup.com',
+  baseURL: 'http://up-as0.qiniup.com',
   statesHook: VueHook,
   shareRequest: false,
   requestAdapter: axiosRequestAdapter()
