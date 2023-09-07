@@ -24,7 +24,7 @@
     <t-form-item label="内容" name="content" class="pr-10 edit">
       <MdEditor v-model="formData.content" @onUploadImg="onUploadImg" :disabled="disabled" />
     </t-form-item>
-    <t-form-item>
+    <t-form-item class="pb-[10px]">
       <t-space size="small">
         <t-button theme="primary" type="submit" :loading="loading" :disabled="disabled">提交</t-button>
         <!-- 下方示例代码，有效，勿删 -->

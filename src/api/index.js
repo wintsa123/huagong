@@ -5,7 +5,7 @@ import { MessagePlugin } from 'tdesign-vue-next';
 import { axiosRequestAdapter } from '@alova/adapter-axios';
 import router from '../router'
 export const alovaInstance = createAlova({
-  baseURL: "http://127.0.0.1:3300",
+  baseURL: "http://183.6.103.200:9089/",
   statesHook: VueHook,
   requestAdapter: GlobalFetch(),
 
