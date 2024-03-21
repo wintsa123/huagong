@@ -17,5 +17,8 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 app.use(TDesign);
-
+app.config.errorHandler = (err, instance, info) => {
+  // 向追踪服务报告错误
+  console.log(err, instance, info)
+}
 app.mount('#app')
