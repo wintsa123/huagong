@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "pm2":" vite build && pm2 serve ./dist --port 8088 --name huagongAdmin",
+    "pm2":" vite build && pm2 serve ./dist --port 8080 --name huagongAdmin",
     "update":" vite build && pm2 restart huagongAdmin"
 
   },
