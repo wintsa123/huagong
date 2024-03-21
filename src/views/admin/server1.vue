@@ -10,7 +10,7 @@
 </template>
     
 <script setup>
-import edit from "@/components/mdeditor.vue";
+import edit from "@/components/mdEditor.vue";
 import { useRequest } from "alova";
 import { ArticleType, ArticleDetail } from "@/api/methods/article";
 
