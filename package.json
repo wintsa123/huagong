@@ -1,13 +1,16 @@
 {
   "name": "huagong-System",
   "version": "1.0",
-  "updateTime": "2023/8/5",
+  "updateTime": "2024/03/21",
   "private": true,
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "pm2":" vite build && pm2 serve ./dist --port 8088 --name huagongAdmin",
+    "update":" vite build && pm2 restart huagongAdmin"
+
   },
   "dependencies": {
     "@alova/adapter-axios": "^1.1.1",
