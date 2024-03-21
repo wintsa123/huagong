@@ -41,7 +41,7 @@ const router = useRouter();
 import { storageLocal } from "@pureadmin/utils"
 import { ref, reactive, watch, computed, getCurrentInstance } from "vue";
 import { MessagePlugin } from "tdesign-vue-next";
-import uploadImg from "./Imgupload.vue";
+import uploadImg from "./imgUpload.vue";
 import { RollbackIcon } from 'tdesign-icons-vue-next';
 import { accessAction } from '@alova/scene-vue';
 import { useRequest, invalidateCache, useFetcher, updateState } from "alova";
