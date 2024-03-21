@@ -28,7 +28,7 @@
 <script setup>
 import { ref, reactive, computed, unref, onMounted, watch,onActivated  } from 'vue';
 import { MessagePlugin } from 'tdesign-vue-next';
-import imgUpload from '@/components/Imgupload.vue'
+import imgUpload from '@/components/imgUpload.vue'
 import { useRequest, updateState } from "alova";
 import { useForm } from '@alova/scene-vue';
 import { cloneDeep } from "@pureadmin/utils"
