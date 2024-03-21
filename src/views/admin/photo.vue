@@ -55,7 +55,7 @@ import { downloadByOnlineUrl } from "@pureadmin/utils"
 import { useRequest, useWatcher, updateState } from "alova";
 import { getlistByprefix, fetchDeleteQiniuData, getToken } from '../../api/methods/qiniuyun.js'
 import { QINIU_CDN_URL } from "@/config.js";
-import imgUpload from "@/components/imgupload.vue";
+import imgUpload from "@/components/imgUpload.vue";
 import { actionDelegationMiddleware } from '@alova/scene-vue';
 const { send: delPhoto, data } = useRequest((id) => fetchDeleteQiniuData(id), {
   immediate: false
